@@ -1,0 +1,288 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif}
+.screen{display:none;min-height:520px}
+.screen.active{display:block}
+.btn-primary{background:#1a56a0;color:#fff;border:none;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;width:100%}
+.btn-primary:hover{background:#0f3d7a}
+.btn-outline{background:#fff;color:#1a56a0;border:1.5px solid #1a56a0;padding:9px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer}
+.btn-outline:hover{background:#e8f1fb}
+.input-field{width:100%;height:38px;border:1px solid #d1d5db;border-radius:8px;padding:0 12px;font-size:14px;color:#1f2937;background:#f9fafb}
+.input-field:focus{outline:none;border-color:#1a56a0;background:#fff}
+.nav-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:#fff;border-bottom:0.5px solid #e5e7eb}
+.logo{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;color:#1a56a0}
+.logo-icon{width:32px;height:32px;background:#1a56a0;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px}
+.step-bar{display:flex;gap:8px;padding:16px 24px;background:#f9fafb;border-bottom:0.5px solid #e5e7eb}
+.step{flex:1;text-align:center;padding:6px 4px;border-radius:8px;font-size:12px;font-weight:500;background:#f3f4f6;color:#6b7280}
+.step.done{background:#d1fae5;color:#065f46}
+.step.active{background:#dbeafe;color:#1e40af}
+.card{background:#fff;border:0.5px solid #e5e7eb;border-radius:12px;padding:20px}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-blue{background:#dbeafe;color:#1e40af}
+.badge-green{background:#d1fae5;color:#065f46}
+.badge-amber{background:#fef3c7;color:#92400e}
+
+/* Screen 1 - Signup */
+#s1 .split{display:grid;grid-template-columns:2fr 3fr;min-height:520px}
+#s1 .left{background:#1a56a0;padding:40px 32px;display:flex;flex-direction:column;justify-content:center}
+#s1 .right{padding:40px 36px;background:#fff}
+#s1 .tagline{font-size:22px;font-weight:700;color:#fff;line-height:1.4;margin-bottom:12px}
+#s1 .sub{font-size:13px;color:#93c5fd;line-height:1.6;margin-bottom:24px}
+#s1 .feat{display:flex;align-items:center;gap:10px;margin-bottom:10px;color:#bfdbfe;font-size:13px}
+#s1 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+#s1 .field{margin-bottom:12px}
+#s1 .field label{display:block;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+
+/* Screen 2 - Connect */
+#s2 .apps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+#s2 .app-card{border:0.5px solid #e5e7eb;border-radius:12px;overflow:hidden;transition:border-color .2s}
+#s2 .app-card.connected{border-color:#22c55e;border-width:2px}
+#s2 .app-header{padding:14px 16px;font-size:15px;font-weight:700}
+#s2 .app-body{padding:14px 16px}
+#s2 .app-desc{font-size:12px;color:#6b7280;margin-bottom:14px}
+#s2 .btn-connect{width:100%;padding:8px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:none}
+#s2 .xero .app-header{background:#e0f6fe;color:#0369a1}
+#s2 .shopify .app-header{background:#eefcdb;color:#3a6e0e}
+#s2 .ga .app-header{background:#fef9c3;color:#78350f}
+
+/* Screen 3 - Meeting */
+#s3{background:#1e1e2e}
+#s3 .meeting-header{display:flex;justify-content:space-between;align-items:center;padding:10px 20px;background:#12121f;border-bottom:1px solid #2d2d45}
+#s3 .meeting-title{color:#ccc;font-size:13px}
+#s3 .rec{color:#f87171;font-size:12px}
+#s3 .meeting-body{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px}
+#s3 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#s3 .tile{background:#2d2d45;border-radius:10px;padding:16px;text-align:center;min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#s3 .tile.dex{background:#0f3d7a;border:2px solid #3b82f6}
+#s3 .avatar{width:44px;height:44px;border-radius:50%;background:#1a56a0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:700;margin:0 auto 8px}
+#s3 .tile-name{color:#ccc;font-size:12px}
+#s3 .dex-name{color:#fff;font-size:13px;font-weight:700}
+#s3 .dex-status{color:#60a5fa;font-size:11px;margin-top:2px}
+#s3 .panel{display:flex;flex-direction:column;gap:10px}
+#s3 .question-bubble{background:#2d2d45;border-radius:8px;padding:10px 14px;color:#ccc;font-size:12px;font-style:italic}
+#s3 .response-box{background:#0a1628;border:1.5px solid #1a56a0;border-radius:10px;overflow:hidden}
+#s3 .response-header{background:#1a56a0;padding:8px 14px;color:#fff;font-size:12px;font-weight:600}
+#s3 .response-body{padding:14px}
+#s3 .big-num{font-size:28px;font-weight:700;color:#fff}
+#s3 .growth{display:inline-block;background:#14532d;color:#4ade80;font-size:11px;padding:3px 10px;border-radius:20px;margin-left:10px}
+#s3 .metric-label{color:#7fa8cc;font-size:12px;margin-bottom:4px}
+#s3 .mini-bars{display:flex;align-items:flex-end;gap:6px;height:50px;margin-top:12px}
+#s3 .bar-wrap{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+#s3 .bar{width:100%;border-radius:3px 3px 0 0}
+#s3 .bar-label{color:#7fa8cc;font-size:10px}
+#s3 .meeting-footer{display:flex;gap:10px;justify-content:center;padding:12px;background:#12121f;border-top:1px solid #2d2d45}
+#s3 .ctrl{background:#2d2d45;color:#ccc;border:none;border-radius:8px;padding:8px 18px;font-size:12px;cursor:pointer}
+#s3 .ctrl.end{background:#dc2626;color:#fff}
+#s3 .ask-row{display:flex;gap:8px;padding:0 16px 12px}
+#s3 .ask-input{flex:1;background:#2d2d45;border:1px solid #3d3d55;border-radius:8px;padding:8px 12px;color:#fff;font-size:13px}
+#s3 .ask-btn{background:#1a56a0;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer}
+
+/* Screen 4 - Summary */
+#s4 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+#s4 .stat{background:#eff6ff;border-radius:10px;padding:16px;text-align:center}
+#s4 .stat-num{font-size:28px;font-weight:700;color:#1a56a0}
+#s4 .stat-label{font-size:12px;color:#6b7280;margin-top:4px}
+#s4 .qa-item{border-left:3px solid #1a56a0;padding:10px 14px;background:#f9fafb;border-radius:0 8px 8px 0;margin-bottom:10px}
+#s4 .qa-q{font-size:13px;font-weight:600;color:#1f2937;margin-bottom:4px}
+#s4 .qa-a{font-size:12px;color:#6b7280}
+.nav-dots{display:flex;justify-content:center;gap:8px;padding:12px 0;background:#f9fafb;border-top:0.5px solid #e5e7eb}
+.dot{width:8px;height:8px;border-radius:50%;background:#d1d5db;cursor:pointer;border:none}
+.dot.active{background:#1a56a0;width:24px;border-radius:4px}
+</style>
+
+<h2 class="sr-only">Dex AI — interactive product demo with 4 screens: sign up, connect accounts, live meeting, and post-meeting summary</h2>
+
+<div id="s1" class="screen active">
+  <div class="split">
+    <div class="left">
+      <div class="logo" style="margin-bottom:28px"><div class="logo-icon">⚡</div><span style="color:#fff">Dex</span></div>
+      <div class="tagline">Your AI meeting assistant for smarter business decisions</div>
+      <div class="sub">Connect your business data and let Dex answer questions live in your meetings.</div>
+      <div class="feat"><span style="color:#60a5fa;font-size:16px">⬡</span> Live data from Xero &amp; Shopify</div>
+      <div class="feat"><span style="color:#60a5fa;font-size:16px">⬡</span> Works inside Microsoft Teams</div>
+      <div class="feat"><span style="color:#60a5fa;font-size:16px">⬡</span> Private &amp; secure by design</div>
+    </div>
+    <div class="right">
+      <div style="font-size:22px;font-weight:700;color:#1f2937;margin-bottom:6px">Create your account</div>
+      <div style="font-size:13px;color:#6b7280;margin-bottom:24px">Free for 14 days — no credit card required.</div>
+      <div class="form-row">
+        <div class="field"><label>First name</label><input class="input-field" placeholder="Jane"></div>
+        <div class="field"><label>Last name</label><input class="input-field" placeholder="Smith"></div>
+      </div>
+      <div class="field"><label>Work email</label><input class="input-field" placeholder="jane@company.com"></div>
+      <div class="field"><label>Password</label><input class="input-field" type="password" placeholder="Min. 8 characters"></div>
+      <div class="field"><label>Company name</label><input class="input-field" placeholder="Acme Pty Ltd"></div>
+      <button class="btn-primary" style="margin-top:8px" onclick="go(2)">Create account →</button>
+      <div style="text-align:center;font-size:13px;color:#6b7280;margin-top:14px">Already have an account? <span style="color:#1a56a0;cursor:pointer;font-weight:500" onclick="go(2)">Sign in</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="s2" class="screen">
+  <div class="nav-bar">
+    <div class="logo"><div class="logo-icon">⚡</div>Dex</div>
+    <span style="font-size:13px;color:#6b7280">Setup — Step 2 of 4</span>
+  </div>
+  <div class="step-bar">
+    <div class="step done">1 Sign up</div>
+    <div class="step active">2 Connect apps</div>
+    <div class="step">3 Add to Teams</div>
+    <div class="step">4 Start meeting</div>
+  </div>
+  <div style="padding:24px">
+    <div style="font-size:20px;font-weight:700;color:#1f2937;text-align:center">Connect your business tools</div>
+    <div style="font-size:13px;color:#6b7280;text-align:center;margin-top:6px">Link Dex to your data so it can answer questions live in your meetings.</div>
+    <div class="apps">
+      <div class="app-card xero" id="xero-card">
+        <div class="app-header">Xero <span class="badge badge-blue" style="font-size:10px;float:right;margin-top:1px">Finance</span></div>
+        <div class="app-body">
+          <div class="app-desc">Pull live accounting data — revenue, invoices, cash flow, and more.</div>
+          <button class="btn-connect" id="xero-btn" style="background:#1a56a0;color:#fff" onclick="connectApp('xero')">Connect Xero</button>
+        </div>
+      </div>
+      <div class="app-card shopify" id="shopify-card">
+        <div class="app-header">Shopify <span class="badge badge-green" style="font-size:10px;float:right;margin-top:1px">E-commerce</span></div>
+        <div class="app-body">
+          <div class="app-desc">Access order data, sales performance, and top products in real time.</div>
+          <button class="btn-connect" id="shopify-btn" style="background:#1a56a0;color:#fff" onclick="connectApp('shopify')">Connect Shopify</button>
+        </div>
+      </div>
+      <div class="app-card ga" id="ga-card">
+        <div class="app-header">Google Analytics <span class="badge badge-amber" style="font-size:10px;float:right;margin-top:1px">Analytics</span></div>
+        <div class="app-body">
+          <div class="app-desc">Track website traffic, sessions, and conversion metrics.</div>
+          <button class="btn-connect" id="ga-btn" style="background:#1a56a0;color:#fff" onclick="connectApp('ga')">Connect GA</button>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:24px;text-align:center">
+      <button class="btn-primary" style="width:auto;padding:10px 32px" onclick="go(3)">Continue to Teams setup →</button>
+    </div>
+  </div>
+</div>
+
+<div id="s3" class="screen">
+  <div class="meeting-header">
+    <span class="meeting-title">Microsoft Teams — Strategy Meeting: Q2 Review</span>
+    <span class="rec">● REC 00:18:42</span>
+  </div>
+  <div class="meeting-body">
+    <div>
+      <div class="tiles">
+        <div class="tile"><div class="avatar">O</div><div class="tile-name">Oscar B.</div></div>
+        <div class="tile"><div class="avatar" style="background:#7c3aed">N</div><div class="tile-name">Nam N.</div></div>
+        <div class="tile dex"><div style="font-size:24px;margin-bottom:6px">⚡</div><div class="dex-name">Dex</div><div class="dex-status" id="dex-status">● Listening...</div></div>
+        <div class="tile"><div class="avatar" style="background:#0891b2">L</div><div class="tile-name">Lingyang M.</div></div>
+      </div>
+      <div class="ask-row" style="margin-top:12px">
+        <input class="ask-input" id="ask-input" placeholder='Try: "What was our revenue last month?"'>
+        <button class="ask-btn" onclick="askDex()">Ask Dex</button>
+      </div>
+      <div class="meeting-footer">
+        <button class="ctrl">Mute</button>
+        <button class="ctrl">Camera off</button>
+        <button class="ctrl end" onclick="go(4)">End &amp; view summary</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="question-bubble" id="question-display">Oscar: "What was our revenue last month?"</div>
+      <div class="response-box">
+        <div class="response-header">⚡ Dex — Live from Xero</div>
+        <div class="response-body" id="dex-response">
+          <div class="metric-label">Revenue — April 2026</div>
+          <div><span class="big-num">$84,320</span><span class="growth">▲ +12.4% vs Mar</span></div>
+          <div class="mini-bars" id="bars"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="s4" class="screen">
+  <div class="nav-bar">
+    <div class="logo"><div class="logo-icon">⚡</div>Dex</div>
+    <button class="btn-outline" onclick="go(1)" style="font-size:13px;padding:6px 14px">← Back to start</button>
+  </div>
+  <div style="padding:24px">
+    <div style="font-size:20px;font-weight:700;color:#1f2937">Meeting summary</div>
+    <div style="font-size:13px;color:#6b7280;margin-top:4px">Strategy Meeting: Q2 Review — 31 May 2026, 10:00am — Duration: 45 min</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">7</div><div class="stat-label">Questions answered</div></div>
+      <div class="stat"><div class="stat-num">2</div><div class="stat-label">Data sources used</div></div>
+      <div class="stat"><div class="stat-num">1.8s</div><div class="stat-label">Avg response time</div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-size:15px;font-weight:600;color:#1f2937">Questions &amp; answers</div>
+      <button class="btn-outline" style="font-size:12px;padding:6px 14px">↓ Export PDF</button>
+    </div>
+    <div class="qa-item"><div class="qa-q">What was our revenue last month?</div><div class="qa-a">$84,320 — up 12.4% vs March (Source: Xero)</div></div>
+    <div class="qa-item"><div class="qa-q">How many orders did we process in April?</div><div class="qa-a">1,204 orders — avg order value $70.03 (Source: Shopify)</div></div>
+    <div class="qa-item"><div class="qa-q">What is our top selling product this quarter?</div><div class="qa-a">Product X — 342 units sold, $24,150 revenue (Source: Shopify)</div></div>
+    <div class="qa-item"><div class="qa-q">What is our current cash position?</div><div class="qa-a">$142,800 available — 18 days of runway at current burn (Source: Xero)</div></div>
+    <div style="margin-top:20px;text-align:center">
+      <button class="btn-primary" style="width:auto;padding:10px 28px" onclick="go(1)">Start a new meeting</button>
+    </div>
+  </div>
+</div>
+
+<div class="nav-dots">
+  <button class="dot active" onclick="go(1)" title="Sign up"></button>
+  <button class="dot" onclick="go(2)" title="Connect apps"></button>
+  <button class="dot" onclick="go(3)" title="Meeting"></button>
+  <button class="dot" onclick="go(4)" title="Summary"></button>
+</div>
+
+<script>
+const screens = ['s1','s2','s3','s4'];
+let current = 1;
+
+function go(n) {
+  document.getElementById(screens[current-1]).classList.remove('active');
+  document.getElementById(screens[n-1]).classList.add('active');
+  current = n;
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===n-1));
+  if(n===3) initBars();
+}
+
+function connectApp(app) {
+  const btn = document.getElementById(app+'-btn');
+  const card = document.getElementById(app+'-card');
+  btn.textContent = '✓ Connected';
+  btn.style.background = '#16a34a';
+  card.classList.add('connected');
+}
+
+const responses = {
+  revenue: {q: 'Oscar: "What was our revenue last month?"', label: 'Revenue — April 2026', num: '$84,320', growth: '▲ +12.4% vs Mar', source: 'Xero'},
+  orders: {q: 'Nam: "How many orders did we process?"', label: 'Orders — April 2026', num: '1,204', growth: '▲ +8.2% vs Mar', source: 'Shopify'},
+  cash: {q: 'Oscar: "What is our current cash position?"', label: 'Cash position — today', num: '$142,800', growth: '18 days runway', source: 'Xero'},
+};
+
+function askDex() {
+  const input = document.getElementById('ask-input').value.toLowerCase();
+  let r = responses.revenue;
+  if(input.includes('order') || input.includes('shopify')) r = responses.orders;
+  else if(input.includes('cash')) r = responses.cash;
+  document.getElementById('dex-status').textContent = '● Thinking...';
+  document.getElementById('question-display').textContent = input ? 'You: "' + document.getElementById('ask-input').value + '"' : r.q;
+  document.getElementById('dex-response').innerHTML = '<div style="color:#7fa8cc;font-size:12px;padding:8px 0">Fetching from ' + r.source + '...</div>';
+  setTimeout(() => {
+    document.getElementById('dex-status').textContent = '● Responding...';
+    document.getElementById('dex-response').innerHTML = '<div class="metric-label">' + r.label + '</div><div><span class="big-num">' + r.num + '</span><span class="growth">' + r.growth + '</span></div><div class="mini-bars" id="bars"></div>';
+    initBars();
+    setTimeout(() => { document.getElementById('dex-status').textContent = '● Listening...'; }, 2000);
+  }, 1200);
+  document.getElementById('ask-input').value = '';
+}
+
+const barData = [{h:55,m:'Dec'},{h:62,m:'Jan'},{h:70,m:'Feb'},{h:68,m:'Mar'},{h:84,m:'Apr'}];
+function initBars() {
+  const el = document.getElementById('bars');
+  if(!el) return;
+  el.innerHTML = barData.map((b,i) => `<div class="bar-wrap"><div class="bar" style="height:${b.h}%;background:${i===4?'#3b82f6':'#2a4a70'}"></div><div class="bar-label">${b.m}</div></div>`).join('');
+}
+
+document.getElementById('ask-input').addEventListener('keydown', e => { if(e.key==='Enter') askDex(); });
+initBars();
+</script>
