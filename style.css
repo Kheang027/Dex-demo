@@ -1515,3 +1515,239 @@ body {
 .qa-title                   { font-size: 18px; }
 .qa-q                       { font-size: 15px; }
 .qa-a                       { font-size: 14px; }
+
+/* ================================================================
+   SCREEN 2 — True full-screen with proper flex layout
+   ================================================================ */
+
+#s2.screen.active {
+  height: 100vh;
+  min-height: unset;
+  overflow: hidden;
+}
+
+#s2 .nav-bar {
+  padding: 14px 32px;
+}
+
+#s2 .logo-text {
+  font-size: 22px;
+}
+
+#s2 .step-bar {
+  padding: 10px 32px;
+  gap: 12px;
+}
+
+#s2 .step {
+  font-size: 14px;
+  padding: 8px 6px;
+}
+
+#s2 .page-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding: 24px 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+#s2 .page-title {
+  font-size: 30px;
+  font-weight: 800;
+  text-align: left;
+}
+
+#s2 .page-sub {
+  font-size: 16px;
+  text-align: left;
+  margin-top: 0;
+}
+
+#s2 .apps {
+  flex: 1;
+  min-height: 0;
+  margin-top: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+#s2 .app-card {
+  display: flex;
+  flex-direction: column;
+}
+
+#s2 .app-header {
+  font-size: 19px;
+  padding: 16px 20px;
+}
+
+#s2 .app-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 20px;
+}
+
+#s2 .app-desc {
+  font-size: 15px;
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+#s2 .btn-connect {
+  font-size: 15px;
+  padding: 11px;
+}
+
+#s2 .how-it-works {
+  margin-top: 0;
+  padding: 18px 20px;
+}
+
+#s2 .how-title {
+  font-size: 16px;
+}
+
+#s2 .how-step-card {
+  padding: 14px 10px;
+}
+
+#s2 .how-step-card h4 {
+  font-size: 15px;
+}
+
+#s2 .how-step-card p {
+  font-size: 12px;
+}
+
+#s2 .tech-tag {
+  font-size: 11px;
+  padding: 3px 8px;
+}
+
+#s2 .center-btn {
+  margin-top: 0;
+}
+
+#s2 .btn-primary.btn-auto {
+  font-size: 16px;
+  padding: 0.85rem 2.4rem;
+}
+
+/* ================================================================
+   SCREEN 4 — True full-screen with proper flex layout
+   ================================================================ */
+
+#s4.screen.active {
+  height: 100vh;
+  min-height: unset;
+  overflow: hidden;
+}
+
+#s4 .nav-bar {
+  padding: 14px 32px;
+}
+
+#s4 .logo-text {
+  font-size: 22px;
+}
+
+#s4 .page-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 24px 40px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#s4 .page-title {
+  font-size: 30px;
+  font-weight: 800;
+  text-align: left;
+}
+
+#s4 .page-sub {
+  font-size: 15px;
+  text-align: left;
+  margin-top: 0;
+}
+
+#s4 .stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 0;
+}
+
+#s4 .stat {
+  padding: 24px 20px;
+  border-radius: 14px;
+}
+
+#s4 .stat-num {
+  font-size: 44px;
+}
+
+#s4 .stat-label {
+  font-size: 15px;
+  margin-top: 6px;
+}
+
+#s4 .pipeline-summary {
+  padding: 16px 22px;
+  margin-bottom: 0;
+}
+
+#s4 .pipeline-summary-title {
+  font-size: 15px;
+  margin-bottom: 12px;
+}
+
+#s4 .flow-tag {
+  font-size: 14px;
+  padding: 5px 14px;
+}
+
+#s4 .flow-arrow {
+  font-size: 14px;
+}
+
+#s4 .qa-header {
+  margin-bottom: 0;
+}
+
+#s4 .qa-title {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+#s4 .qa-item {
+  padding: 14px 18px;
+  margin-bottom: 10px;
+}
+
+#s4 .qa-q {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+#s4 .qa-a {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+#s4 .center-btn {
+  margin-top: 0;
+}
+
+#s4 .btn-primary.btn-auto {
+  font-size: 16px;
+  padding: 0.85rem 2.4rem;
+}
