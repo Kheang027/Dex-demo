@@ -1427,3 +1427,91 @@ body {
 .tb-end .tb-label {
   color: #fff;
 }
+
+/* ================================================================
+   FULL-SCREEN LAYOUTS — flex column so dots always sit at bottom
+   ================================================================ */
+
+#s1.screen.active {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#s1 .split {
+  flex: 1;
+  min-height: 0;
+}
+
+#s2.screen.active {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#s2 .page-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+#s4.screen.active {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#s4 .page-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Dark nav-dots for Screen 3 */
+.s3-dots {
+  background: var(--dark-deep);
+  border-top: 1px solid #2a2a3e;
+}
+
+.s3-dots .dot {
+  background: #3d3d55;
+}
+
+.s3-dots .dot.active {
+  background: #3b82f6;
+}
+
+/* ================================================================
+   TEXT SIZE INCREASES — easier to read
+   ================================================================ */
+
+/* Screen 1 */
+.tagline        { font-size: 30px; }
+.sub            { font-size: 15px; }
+.feat           { font-size: 15px; }
+.form-title     { font-size: 26px; }
+.form-sub       { font-size: 15px; }
+.field label    { font-size: 13px; }
+.input-field    { font-size: 15px; }
+.btn-primary    { font-size: 15px; }
+.signin-text    { font-size: 14px; }
+
+/* Screen 2 */
+.step-label-text            { font-size: 14px; }
+.step                       { font-size: 13px; }
+.page-title                 { font-size: 24px; }
+.page-sub                   { font-size: 15px; }
+.app-header                 { font-size: 17px; }
+.app-desc                   { font-size: 14px; }
+.btn-connect                { font-size: 14px; }
+.how-title                  { font-size: 15px; }
+.how-step-card h4           { font-size: 14px; }
+.how-step-card p            { font-size: 12px; }
+.tech-tag                   { font-size: 11px; }
+
+/* Screen 4 */
+.stat-num                   { font-size: 34px; }
+.stat-label                 { font-size: 13px; }
+.pipeline-summary-title     { font-size: 14px; }
+.flow-tag                   { font-size: 13px; }
+.qa-title                   { font-size: 18px; }
+.qa-q                       { font-size: 15px; }
+.qa-a                       { font-size: 14px; }
