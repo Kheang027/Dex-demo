@@ -1,67 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dex — AI Meeting Assistant</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dex — AI Meeting Assistant</title>
+<link rel="stylesheet" href="styles.css"/>
+</head><body>
+<!-- SCREEN 1: SIGN UP -->
 <div id="s1" class="screen active">
+  <div class="nav-dots" style="border-top:none;border-bottom:1px solid var(--grey-200)">
+    <button class="dot active" onclick="go(1)"></button>
+    <button class="dot" onclick="go(2)"></button>
+    <button class="dot" onclick="go(3)"></button>
+    <button class="dot" onclick="go(4)"></button>
+  </div>
   <div class="split">
     <div class="left">
-      <div class="logo" style="margin-bottom: clamp(1.5rem, 3vh, 2rem); animation: slideInUp 0.5s ease-out 0.1s both;">
+      <div class="logo" style="margin-bottom:32px;animation:slideLeft .4s both">
         <div class="logo-icon">⚡</div>
-        <span style="color: #fff">Dex</span>
+        <span style="color:#fff;font-size:22px">Dex</span>
       </div>
       <div class="tagline">Your AI meeting assistant for smarter business decisions</div>
-      <div class="sub">Connect your business data and let Dex answer questions live in your meetings.</div>
-      <div class="feat"><span style="color: #60a5fa; font-size: 16px">⬡</span> Live data from Xero &amp; Shopify</div>
-      <div class="feat"><span style="color: #60a5fa; font-size: 16px">⬡</span> Works inside Microsoft Teams</div>
-      <div class="feat"><span style="color: #60a5fa; font-size: 16px">⬡</span> Private &amp; secure by design</div>
+      <div class="sub">Connect your business data and let Dex answer questions live — using ASR, LLM, RAG and MCP.</div>
+      <div class="feat"><div class="feat-dot"></div>Live data from Xero &amp; Shopify via RAG</div>
+      <div class="feat"><div class="feat-dot"></div>Works inside Microsoft Teams as a bot</div>
+      <div class="feat"><div class="feat-dot"></div>MCP-powered precise calculations</div>
+      <div class="feat"><div class="feat-dot"></div>Private &amp; secure by design</div>
     </div>
     <div class="right">
-      <div style="font-size: clamp(18px, 3.5vw, 24px); font-weight: 700; color: #1f2937; margin-bottom: clamp(0.4rem, 1vh, 0.8rem); animation: textFadeIn 0.5s ease-out;">Create your account</div>
-      <div style="font-size: clamp(12px, 1.8vw, 14px); color: #6b7280; margin-bottom: clamp(1.5rem, 2.5vh, 2rem); animation: fadeIn 0.5s ease-out 0.1s both;">Free for 14 days — no credit card required.</div>
+      <h2>Create your account</h2>
+      <p>Free for 14 days — no credit card required.</p>
       <div class="form-row">
-        <div class="field">
-          <label>First name</label>
-          <input class="input-field" placeholder="Jane" />
-        </div>
-        <div class="field">
-          <label>Last name</label>
-          <input class="input-field" placeholder="Smith" />
-        </div>
+        <div class="field"><label>First name</label><input class="input-field" placeholder="Jane"/></div>
+        <div class="field"><label>Last name</label><input class="input-field" placeholder="Smith"/></div>
       </div>
-      <div class="field">
-        <label>Work email</label>
-        <input class="input-field" placeholder="jane@company.com" />
-      </div>
-      <div class="field">
-        <label>Password</label>
-        <input class="input-field" type="password" placeholder="Min. 8 characters" />
-      </div>
-      <div class="field">
-        <label>Company name</label>
-        <input class="input-field" placeholder="Acme Pty Ltd" />
-      </div>
-      <button class="btn-primary" style="margin-top: 8px" onclick="go(2)">Create account →</button>
-      <div style="text-align: center; font-size: 13px; color: #6b7280; margin-top: 14px;">
-        Already have an account?
-        <span style="color: #1a56a0; cursor: pointer; font-weight: 500" onclick="go(2)">Sign in</span>
+      <div class="field"><label>Work email</label><input class="input-field" placeholder="jane@company.com"/></div>
+      <div class="field"><label>Password</label><input class="input-field" type="password" placeholder="Min. 8 characters"/></div>
+      <div class="field"><label>Company name</label><input class="input-field" placeholder="Acme Pty Ltd"/></div>
+      <button class="btn-primary" style="margin-top:8px" onclick="go(2)">Create account →</button>
+      <div style="text-align:center;font-size:13px;color:var(--grey-600);margin-top:14px">
+        Already have an account? <span style="color:var(--blue);cursor:pointer;font-weight:600" onclick="go(2)">Sign in</span>
       </div>
     </div>
   </div>
 </div>
-
+<!-- SCREEN 2: CONNECT APPS -->
 <div id="s2" class="screen">
   <div class="nav-bar">
-    <div class="logo">
-      <div class="logo-icon">⚡</div>
-      Dex
-    </div>
-    <span style="font-size: clamp(12px, 1.8vw, 14px); color: #6b7280; animation: fadeIn 0.5s ease-out 0.2s both;">Setup — Step 2 of 4</span>
+    <div class="logo"><div class="logo-icon">⚡</div>Dex</div>
+    <span style="font-size:13px;color:var(--grey-600)">Setup — Step 2 of 4</span>
   </div>
   <div class="step-bar">
     <div class="step done">1 Sign up</div>
@@ -69,66 +56,103 @@
     <div class="step">3 Add to Teams</div>
     <div class="step">4 Start meeting</div>
   </div>
-  <div style="padding: clamp(1.2rem, 3vh, 2rem)">
-    <div style="font-size: clamp(18px, 3.5vw, 22px); font-weight: 700; color: #1f2937; text-align: center; animation: textFadeIn 0.5s ease-out;">Connect your business tools</div>
-    <div style="font-size: clamp(12px, 1.8vw, 14px); color: #6b7280; text-align: center; margin-top: clamp(0.4rem, 1vh, 0.8rem); animation: fadeIn 0.5s ease-out 0.1s both;">Link Dex to your data so it can answer questions live in your meetings.</div>
+  <div style="padding:24px">
+    <div style="font-size:20px;font-weight:700;color:var(--grey-900);text-align:center">Connect your business tools</div>
+    <div style="font-size:13px;color:var(--grey-600);text-align:center;margin-top:6px">Dex uses <strong>RAG</strong> to fetch live data from these sources during your meetings.</div>
     <div class="apps">
       <div class="app-card xero" id="xero-card">
-        <div class="app-header">Xero <span class="badge badge-blue" style="font-size: 10px; float: right; margin-top: 1px">Finance</span></div>
+        <div class="app-header">Xero <span class="badge badge-blue">Finance</span></div>
         <div class="app-body">
-          <div class="app-desc">Pull live accounting data — revenue, invoices, cash flow, and more.</div>
-          <button class="btn-connect" id="xero-btn" style="background: #1a56a0; color: #fff" onclick="connectApp('xero')">Connect Xero</button>
+          <div class="app-desc">Revenue, invoices, cash flow — pulled live via Xero API using RAG retrieval.</div>
+          <button class="btn-connect" id="xero-btn" style="background:var(--blue);color:#fff" onclick="connectApp('xero')">Connect Xero</button>
         </div>
       </div>
       <div class="app-card shopify" id="shopify-card">
-        <div class="app-header">Shopify <span class="badge badge-green" style="font-size: 10px; float: right; margin-top: 1px">E-commerce</span></div>
+        <div class="app-header">Shopify <span class="badge badge-green">E-commerce</span></div>
         <div class="app-body">
-          <div class="app-desc">Access order data, sales performance, and top products in real time.</div>
-          <button class="btn-connect" id="shopify-btn" style="background: #1a56a0; color: #fff" onclick="connectApp('shopify')">Connect Shopify</button>
+          <div class="app-desc">Orders, sales performance, top products — retrieved in real time during meetings.</div>
+          <button class="btn-connect" id="shopify-btn" style="background:var(--blue);color:#fff" onclick="connectApp('shopify')">Connect Shopify</button>
         </div>
       </div>
       <div class="app-card ga" id="ga-card">
-        <div class="app-header">Google Analytics <span class="badge badge-amber" style="font-size: 10px; float: right; margin-top: 1px">Analytics</span></div>
+        <div class="app-header">Google Analytics <span class="badge badge-amber">Analytics</span></div>
         <div class="app-body">
-          <div class="app-desc">Track website traffic, sessions, and conversion metrics.</div>
-          <button class="btn-connect" id="ga-btn" style="background: #1a56a0; color: #fff" onclick="connectApp('ga')">Connect GA</button>
+          <div class="app-desc">Website traffic and conversion metrics — available as an additional RAG data source.</div>
+          <button class="btn-connect" id="ga-btn" style="background:var(--blue);color:#fff" onclick="connectApp('ga')">Connect GA</button>
         </div>
       </div>
     </div>
-    <div style="margin-top: clamp(1.5rem, 3vh, 2rem); text-align: center;">
-      <button class="btn-primary" style="width: auto; padding: clamp(0.6rem, 1.2vh, 0.8rem) clamp(1.8rem, 3.5vw, 2.5rem);" onclick="go(3)">Continue to Teams setup →</button>
+    <!-- How Dex works panel -->
+    <div class="how-it-works">
+      <div class="how-title">⚡ How Dex works — the AI pipeline</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">
+        <div class="how-step" style="flex-direction:column;align-items:center;text-align:center;gap:6px">
+          <div class="how-num">1</div>
+          <div class="how-content">
+            <h4>ASR</h4>
+            <p>Speech recognition converts spoken questions to text in real time</p>
+            <span class="tech-tag">Whisper</span>
+          </div>
+        </div>
+        <div class="how-step" style="flex-direction:column;align-items:center;text-align:center;gap:6px">
+          <div class="how-num">2</div>
+          <div class="how-content">
+            <h4>LLM</h4>
+            <p>Large language model understands the intent and identifies what data is needed</p>
+            <span class="tech-tag">GPT-4</span>
+          </div>
+        </div>
+        <div class="how-step" style="flex-direction:column;align-items:center;text-align:center;gap:6px">
+          <div class="how-num">3</div>
+          <div class="how-content">
+            <h4>RAG</h4>
+            <p>Retrieval-Augmented Generation fetches live data from Xero &amp; Shopify APIs</p>
+            <span class="tech-tag">API</span>
+          </div>
+        </div>
+        <div class="how-step" style="flex-direction:column;align-items:center;text-align:center;gap:6px">
+          <div class="how-num">4</div>
+          <div class="how-content">
+            <h4>MCP</h4>
+            <p>Model Context Protocol runs a calculator tool to compute precise figures</p>
+            <span class="tech-tag">Tools</span>
+          </div>
+        </div>
+        <div class="how-step" style="flex-direction:column;align-items:center;text-align:center;gap:6px">
+          <div class="how-num">5</div>
+          <div class="how-content">
+            <h4>Response</h4>
+            <p>LLM generates a natural language answer delivered inside Teams</p>
+            <span class="tech-tag">&lt;2s</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:24px;text-align:center">
+      <button class="btn-primary" style="width:auto;padding:10px 32px" onclick="go(3)">Continue to Teams setup →</button>
     </div>
   </div>
 </div>
-
+<!-- SCREEN 3: MEETING -->
 <div id="s3" class="screen">
   <div class="meeting-header">
     <span class="meeting-title">Microsoft Teams — Strategy Meeting: Q2 Review</span>
     <span class="rec">● REC 00:18:42</span>
   </div>
   <div class="meeting-body">
-    <div>
+    <div class="left-panel">
       <div class="tiles">
-        <div class="tile">
-          <div class="avatar">O</div>
-          <div class="tile-name">Oscar B.</div>
-        </div>
-        <div class="tile">
-          <div class="avatar" style="background: #7c3aed">N</div>
-          <div class="tile-name">Nam N.</div>
-        </div>
+        <div class="tile"><div class="avatar">O</div><div class="tile-name">Oscar B.</div></div>
+        <div class="tile"><div class="avatar" style="background:#7c3aed">N</div><div class="tile-name">Nam N.</div></div>
         <div class="tile dex">
-          <div style="font-size: 24px; margin-bottom: 6px">⚡</div>
+          <div style="font-size:22px;margin-bottom:5px">⚡</div>
           <div class="dex-name">Dex</div>
           <div class="dex-status" id="dex-status">● Listening...</div>
         </div>
-        <div class="tile">
-          <div class="avatar" style="background: #0891b2">L</div>
-          <div class="tile-name">Lingyang M.</div>
-        </div>
+        <div class="tile"><div class="avatar" style="background:#0891b2">L</div><div class="tile-name">Lingyang M.</div></div>
       </div>
-      <div class="ask-row" style="margin-top: 12px">
-        <input class="ask-input" id="ask-input" placeholder='Try: "What was our revenue last month?"' />
+      <div class="ask-row">
+        <input class="ask-input" id="ask-input" placeholder='Try: "What was our revenue last month?"'/>
         <button class="ask-btn" onclick="askDex()">Ask Dex</button>
       </div>
       <div class="meeting-footer">
@@ -139,79 +163,196 @@
     </div>
     <div class="panel">
       <div class="question-bubble" id="question-display">Oscar: "What was our revenue last month?"</div>
-      <div class="response-box">
+      <!-- AI Pipeline Tracker -->
+      <div class="pipeline" id="pipeline-box">
+        <div class="pipeline-header">
+          <span style="font-size:14px">⚡</span>
+          <span class="pipeline-title">Dex AI Pipeline — Live</span>
+        </div>
+        <div class="pipeline-body" id="pipeline-steps">
+          <div class="pipeline-step done" id="pstep-1">
+            <div class="step-num">1</div>
+            <span class="step-label">ASR</span>
+            <span class="step-desc">Speech recognised → text captured</span>
+            <span class="step-tag">Whisper</span>
+          </div>
+          <div class="pipeline-step done" id="pstep-2">
+            <div class="step-num">2</div>
+            <span class="step-label">LLM</span>
+            <span class="step-desc">Intent detected → query Xero</span>
+            <span class="step-tag">GPT-4</span>
+          </div>
+          <div class="pipeline-step done" id="pstep-3">
+            <div class="step-num">3</div>
+            <span class="step-label">RAG</span>
+            <span class="step-desc">April revenue fetched from Xero API</span>
+            <span class="step-tag">API</span>
+          </div>
+          <div class="pipeline-step done" id="pstep-4">
+            <div class="step-num">4</div>
+            <span class="step-label">MCP</span>
+            <span class="step-desc">Growth calculated: +12.4% vs March</span>
+            <span class="step-tag">Calc</span>
+          </div>
+          <div class="pipeline-step done" id="pstep-5">
+            <div class="step-num">5</div>
+            <span class="step-label">Reply</span>
+            <span class="step-desc">Response delivered in Teams</span>
+            <span class="step-tag">&lt;2s</span>
+          </div>
+        </div>
+      </div>
+      <div class="response-box" id="response-box">
         <div class="response-header">⚡ Dex — Live from Xero</div>
         <div class="response-body" id="dex-response">
           <div class="metric-label">Revenue — April 2026</div>
-          <div>
-            <span class="big-num">$84,320</span>
-            <span class="growth">▲ +12.4% vs Mar</span>
-          </div>
+          <div><span class="big-num">$84,320</span><span class="growth">▲ +12.4% vs Mar</span></div>
           <div class="mini-bars" id="bars"></div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
+<!-- SCREEN 4: SUMMARY -->
 <div id="s4" class="screen">
   <div class="nav-bar">
-    <div class="logo">
-      <div class="logo-icon">⚡</div>
-      Dex
-    </div>
-    <button class="btn-outline" onclick="go(1)" style="font-size: clamp(12px, 1.8vw, 14px); padding: clamp(0.4rem, 0.8vh, 0.6rem) clamp(0.9rem, 1.5vw, 1.1rem); animation: slideInRight 0.4s ease-out;">← Back to start</button>
+    <div class="logo"><div class="logo-icon">⚡</div>Dex</div>
+    <button class="btn-outline" onclick="go(1)" style="font-size:13px;padding:6px 14px">← Back to start</button>
   </div>
-  <div style="padding: clamp(1.2rem, 3vh, 2rem)">
-    <div style="font-size: clamp(18px, 3.5vw, 22px); font-weight: 700; color: #1f2937; animation: textFadeIn 0.5s ease-out;">Meeting summary</div>
-    <div style="font-size: clamp(12px, 1.8vw, 14px); color: #6b7280; margin-top: clamp(0.3rem, 0.6vh, 0.5rem); animation: fadeIn 0.5s ease-out 0.1s both;">Strategy Meeting: Q2 Review — 31 May 2026, 10:00am — Duration: 45 min</div>
+  <div style="padding:24px">
+    <div style="font-size:20px;font-weight:700;color:var(--grey-900)">Meeting summary</div>
+    <div style="font-size:13px;color:var(--grey-600);margin-top:4px">Strategy Meeting: Q2 Review — 31 May 2026, 10:00am — Duration: 45 min</div>
     <div class="stats">
-      <div class="stat">
-        <div class="stat-num">7</div>
-        <div class="stat-label">Questions answered</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">2</div>
-        <div class="stat-label">Data sources used</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num">1.8s</div>
-        <div class="stat-label">Avg response time</div>
+      <div class="stat"><div class="stat-num">7</div><div class="stat-label">Questions answered</div></div>
+      <div class="stat"><div class="stat-num">2</div><div class="stat-label">Data sources used</div></div>
+      <div class="stat"><div class="stat-num">1.8s</div><div class="stat-label">Avg response time</div></div>
+    </div>
+    <!-- Pipeline summary -->
+    <div style="background:var(--blue-light);border-radius:10px;padding:14px 18px;margin-bottom:16px;animation:slideUp .4s .1s both">
+      <div style="font-size:12px;font-weight:700;color:var(--blue-dark);margin-bottom:8px">AI pipeline used this meeting</div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:11px;background:var(--blue);color:#fff;padding:3px 10px;border-radius:20px;font-family:var(--mono)">ASR → Text</span>
+        <span style="color:var(--grey-400)">→</span>
+        <span style="font-size:11px;background:var(--blue);color:#fff;padding:3px 10px;border-radius:20px;font-family:var(--mono)">LLM Intent</span>
+        <span style="color:var(--grey-400)">→</span>
+        <span style="font-size:11px;background:var(--blue);color:#fff;padding:3px 10px;border-radius:20px;font-family:var(--mono)">RAG Fetch</span>
+        <span style="color:var(--grey-400)">→</span>
+        <span style="font-size:11px;background:var(--blue);color:#fff;padding:3px 10px;border-radius:20px;font-family:var(--mono)">MCP Compute</span>
+        <span style="color:var(--grey-400)">→</span>
+        <span style="font-size:11px;background:var(--green);color:#fff;padding:3px 10px;border-radius:20px;font-family:var(--mono)">Response ✓</span>
       </div>
     </div>
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: clamp(0.9rem, 1.8vh, 1.2rem);">
-      <div style="font-size: clamp(13px, 2vw, 16px); font-weight: 600; color: #1f2937; animation: textFadeIn 0.5s ease-out;">Questions &amp; answers</div>
-      <button class="btn-outline" style="font-size: clamp(11px, 1.5vw, 13px); padding: clamp(0.4rem, 0.8vh, 0.6rem) clamp(0.9rem, 1.5vw, 1.1rem);">↓ Export PDF</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-size:15px;font-weight:700;color:var(--grey-900)">Questions &amp; answers</div>
+      <button class="btn-outline" style="font-size:12px;padding:6px 14px">↓ Export PDF</button>
     </div>
     <div class="qa-item">
       <div class="qa-q">What was our revenue last month?</div>
-      <div class="qa-a">$84,320 — up 12.4% vs March (Source: Xero)</div>
+      <div class="qa-a">$84,320 — up 12.4% vs March <span class="source-tag">Xero</span> <span class="source-tag">MCP calc</span></div>
     </div>
     <div class="qa-item">
       <div class="qa-q">How many orders did we process in April?</div>
-      <div class="qa-a">1,204 orders — avg order value $70.03 (Source: Shopify)</div>
+      <div class="qa-a">1,204 orders — avg order value $70.03 <span class="source-tag">Shopify</span></div>
     </div>
     <div class="qa-item">
       <div class="qa-q">What is our top selling product this quarter?</div>
-      <div class="qa-a">Product X — 342 units sold, $24,150 revenue (Source: Shopify)</div>
+      <div class="qa-a">Product X — 342 units sold, $24,150 revenue <span class="source-tag">Shopify</span></div>
     </div>
     <div class="qa-item">
       <div class="qa-q">What is our current cash position?</div>
-      <div class="qa-a">$142,800 available — 18 days of runway at current burn (Source: Xero)</div>
+      <div class="qa-a">$142,800 available — 18 days of runway at current burn <span class="source-tag">Xero</span> <span class="source-tag">MCP calc</span></div>
     </div>
-    <div style="margin-top: clamp(1.5rem, 3vh, 2rem); text-align: center; animation: slideInUp 0.5s ease-out;">
-      <button class="btn-primary" style="width: auto; padding: clamp(0.6rem, 1.2vh, 0.8rem) clamp(1.8rem, 3.5vw, 2.2rem);" onclick="go(1)">Start a new meeting</button>
+    <div style="margin-top:20px;text-align:center">
+      <button class="btn-primary" style="width:auto;padding:10px 28px" onclick="go(1)">Start a new meeting</button>
     </div>
   </div>
+  <div class="nav-dots">
+    <button class="dot" onclick="go(1)"></button>
+    <button class="dot" onclick="go(2)"></button>
+    <button class="dot" onclick="go(3)"></button>
+    <button class="dot active" onclick="go(4)"></button>
+  </div>
 </div>
-
-<div class="nav-dots">
-  <button class="dot active" onclick="go(1)" title="Sign up"></button>
-  <button class="dot" onclick="go(2)" title="Connect apps"></button>
-  <button class="dot" onclick="go(3)" title="Meeting"></button>
-  <button class="dot" onclick="go(4)" title="Summary"></button>
-</div>
-
+const screens=['s1','s2','s3','s4'];
+let current=1;
+function go(n){
+  document.getElementById(screens[current-1]).classList.remove('active');
+  document.getElementById(screens[n-1]).classList.add('active');
+  current=n;
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===n-1));
+  if(n===3)initBars();
+}
+function connectApp(app){
+  const btn=document.getElementById(app+'-btn');
+  const card=document.getElementById(app+'-card');
+  btn.textContent='✓ Connected';
+  btn.style.background='#16a34a';
+  card.classList.add('connected');
+}
+const responses={
+  revenue:{q:'Oscar: "What was our revenue last month?"',label:'Revenue — April 2026',num:'$84,320',growth:'▲ +12.4% vs Mar',source:'Xero',mcpDesc:'Growth calculated: +12.4% vs March',ragDesc:'April revenue fetched from Xero API'},
+  orders:{q:'Nam: "How many orders did we process?"',label:'Orders — April 2026',num:'1,204',growth:'▲ +8.2% vs Mar',source:'Shopify',mcpDesc:'Avg order value calculated: $70.03',ragDesc:'April orders fetched from Shopify API'},
+  cash:{q:'Oscar: "What is our current cash position?"',label:'Cash position — today',num:'$142,800',growth:'18 days runway',source:'Xero',mcpDesc:'Runway days computed: 18 days',ragDesc:'Cash balance fetched from Xero API'},
+};
+const pipelineLabels=['ASR','LLM','RAG','MCP','Reply'];
+function resetPipeline(){
+  for(let i=1;i<=5;i++){
+    const el=document.getElementById('pstep-'+i);
+    el.classList.remove('active','done');
+  }
+}
+function animatePipeline(r,cb){
+  resetPipeline();
+  const descs=[
+    'Speech recognised → text captured',
+    'Intent detected → query '+r.source,
+    r.ragDesc,
+    r.mcpDesc,
+    'Response delivered in Teams'
+  ];
+  let step=1;
+  function next(){
+    if(step>5){if(cb)cb();return;}
+    document.getElementById('pstep-'+step).classList.add('active');
+    if(step>1)document.getElementById('pstep-'+(step-1)).classList.replace('active','done');
+    const desc=document.querySelector('#pstep-'+step+' .step-desc');
+    if(desc)desc.textContent=descs[step-1];
+    step++;
+    setTimeout(next,step===5?600:400);
+  }
+  next();
+}
+function askDex(){
+  const inputEl=document.getElementById('ask-input');
+  const input=inputEl.value.toLowerCase();
+  let r=responses.revenue;
+  if(input.includes('order')||input.includes('shopify'))r=responses.orders;
+  else if(input.includes('cash'))r=responses.cash;
+  document.getElementById('dex-status').textContent='● Thinking...';
+  document.getElementById('question-display').textContent=input?'You: "'+inputEl.value+'"':r.q;
+  document.getElementById('dex-response').innerHTML='<div style="color:#7fa8cc;font-size:11px;padding:8px 0;font-family:var(--mono)">Processing...</div>';
+  document.getElementById('response-box').style.opacity='.4';
+  inputEl.value='';
+  animatePipeline(r,()=>{
+    document.getElementById('dex-status').textContent='● Responding...';
+    document.getElementById('response-box').style.opacity='1';
+    document.getElementById('dex-response').innerHTML=
+      '<div class="metric-label">'+r.label+'</div>'+
+      '<div><span class="big-num">'+r.num+'</span><span class="growth">'+r.growth+'</span></div>'+
+      '<div class="mini-bars" id="bars"></div>';
+    initBars();
+    setTimeout(()=>{document.getElementById('dex-status').textContent='● Listening...';},2000);
+  });
+}
+const barData=[{h:55,m:'Dec'},{h:62,m:'Jan'},{h:70,m:'Feb'},{h:68,m:'Mar'},{h:84,m:'Apr'}];
+function initBars(){
+  const el=document.getElementById('bars');
+  if(!el)return;
+  el.innerHTML=barData.map((b,i)=>`<div class="bar-wrap"><div class="bar" style="height:${b.h}%;background:${i===4?'#3b82f6':'#2a4a70'}"></div><div class="bar-label">${b.m}</div></div>`).join('');
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('ask-input').addEventListener('keydown',e=>{if(e.key==='Enter')askDex();});
+  initBars();
+});
 <script src="script.js"></script>
-</body>
-</html>
+</body></html>
