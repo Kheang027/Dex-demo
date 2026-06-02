@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dex — AI Meeting Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ── Reset ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",system-ui,sans-serif;background:#fff;color:#111827;font-size:15px;line-height:1.6;overflow-x:hidden}
+a{text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+ul{list-style:none}
+img{display:block}
+
+/* ── Variables ── */
+:root{
+  --blue:#1a56a0;--blue-dk:#0f3d7a;--blue-lt:#e8f1fb;
+  --green:#16a34a;--green-lt:#d1fae5;
+  --g50:#f9fafb;--g100:#f3f4f6;--g200:#e5e7eb;--g300:#d1d5db;
+  --g400:#9ca3af;--g500:#6b7280;--g600:#4b5563;--g700:#374151;--g800:#1f2937;--g900:#111827;
+  --dark:#1e1e2e;--dark-mid:#2d2d45;--dark-deep:#12121f;
+  --mono:"DM Mono",monospace;
+  --r:10px;--r-lg:14px;--r-xl:18px;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.05);
+  --sh-md:0 4px 16px rgba(0,0,0,.09),0 8px 32px rgba(0,0,0,.07);
+  --sh-lg:0 12px 48px rgba(0,0,0,.18);
+}
+
+/* ── Page transitions ── */
+.page{display:none;min-height:100vh;padding-bottom:52px;animation:none}
+.page.active{display:block;animation:pgIn .38s cubic-bezier(.16,1,.3,1)}
+@keyframes pgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+#p4.page{padding-bottom:0;min-height:unset}
+
+/* ── Nav dots (fixed) ── */
+#ndbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  display:flex;justify-content:center;align-items:center;gap:8px;
+  padding:11px 0 13px;
+  background:rgba(255,255,255,.93);backdrop-filter:blur(10px);
+  border-top:1px solid rgba(0,0,0,.06);
+  transition:background .3s,border-color .3s;
+}
+#ndbar.dark{background:rgba(18,18,31,.95);border-top-color:rgba(255,255,255,.07)}
+.nd{width:8px;height:8px;border-radius:50%;background:var(--g300);border:none;cursor:pointer;transition:all .28s;padding:0}
+.nd.on{width:24px;border-radius:4px;background:var(--blue)}
+#ndbar.dark .nd{background:#3d3d55}
+#ndbar.dark .nd.on{background:#3b82f6}
+
+/* ── Shared buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-weight:600;border:none;border-radius:var(--r);cursor:pointer;transition:all .2s;white-space:nowrap;font-family:inherit}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-dk);transform:translateY(-1px);box-shadow:0 4px 18px rgba(26,86,160,.35)}
+.btn-outline{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+.btn-outline:hover{background:var(--blue-lt)}
+.btn-ghost{background:transparent;color:var(--g600);border-radius:var(--r)}
+.btn-ghost:hover{background:var(--g100);color:var(--g900)}
+.btn-sm{font-size:13px;padding:7px 16px}
+.btn-md{font-size:15px;padding:10px 22px}
+.btn-lg{font-size:16px;padding:13px 28px;border-radius:var(--r-lg)}
+.btn-xl{font-size:17px;padding:15px 36px;border-radius:var(--r-lg)}
+.btn-full{width:100%;justify-content:center}
+.btn-white{background:#fff;color:var(--blue);font-weight:700;border:none;border-radius:var(--r-lg);cursor:pointer;transition:all .2s;font-family:inherit}
+.btn-white:hover{background:var(--g100);transform:translateY(-1px)}
+
+/* ── Shared input/field ── */
+.inp{width:100%;height:44px;border:1.5px solid var(--g200);border-radius:var(--r);padding:0 14px;font-size:15px;font-family:inherit;background:var(--g50);color:var(--g900);outline:none;transition:all .2s}
+.inp:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 3px rgba(26,86,160,.1)}
+.fld{margin-bottom:14px}
+.fld label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g500);margin-bottom:6px}
+
+/* ── Logo ── */
+.logo{display:flex;align-items:center;gap:9px}
+.logo-mark{width:34px;height:34px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
+.logo-name{font-size:20px;font-weight:800;color:var(--blue);letter-spacing:-.5px}
+.logo-name.w{color:#fff}
+
+/* ═══════════════════════════════════════════════
+   PAGE 1 — LANDING
+═══════════════════════════════════════════════ */
+
+/* LP nav */
+.lp-nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--g200)}
+.lp-nav-inner{max-width:1100px;margin:0 auto;padding:13px 24px;display:flex;align-items:center;gap:32px}
+.lp-links{display:flex;gap:2px;flex:1}
+.lp-links a{color:var(--g600);font-size:14px;font-weight:500;padding:7px 13px;border-radius:var(--r);transition:all .2s}
+.lp-links a:hover{color:var(--g900);background:var(--g100)}
+.lp-actions{display:flex;align-items:center;gap:10px}
+
+/* Hero */
+.hero{background:linear-gradient(160deg,#eef4ff 0%,#f6f9ff 45%,#fff 100%);padding:88px 0 72px;text-align:center;overflow:hidden;position:relative}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 900px 500px at 50% 0%,rgba(26,86,160,.06),transparent);pointer-events:none}
+.hero-inner{position:relative;max-width:760px;margin:0 auto;padding:0 24px}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:var(--blue-lt);color:var(--blue);border:1px solid rgba(26,86,160,.18);border-radius:100px;font-size:13px;font-weight:600;padding:5px 15px;margin-bottom:26px}
+.hero-h1{font-size:58px;font-weight:800;color:var(--g900);line-height:1.09;letter-spacing:-2px;margin-bottom:22px}
+.hero-h1 em{font-style:normal;color:var(--blue)}
+.hero-sub{font-size:18px;color:var(--g500);line-height:1.7;max-width:560px;margin:0 auto 36px}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:44px}
+.hero-proof{color:var(--g400);font-size:13px}
+.hero-proof strong{color:var(--g600)}
+
+/* App preview card */
+.preview-wrap{max-width:920px;margin:60px auto 0;padding:0 24px;position:relative}
+.preview-wrap::before{content:'';position:absolute;top:20px;left:50%;transform:translateX(-50%);width:80%;height:60%;background:radial-gradient(ellipse,rgba(26,86,160,.12),transparent 70%);filter:blur(30px);pointer-events:none}
+.preview-card{position:relative;background:var(--dark-deep);border-radius:18px;overflow:hidden;box-shadow:0 36px 80px rgba(10,10,20,.55),0 0 0 1px rgba(255,255,255,.06)}
+.preview-chrome{background:#0d0d1e;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.05)}
+.chrome-dots{display:flex;gap:6px}
+.chrome-dots span{width:10px;height:10px;border-radius:50%}
+.preview-bar-title{color:#9ca3af;font-size:12px}
+.preview-rec{color:#f87171;font-size:11px;font-family:var(--mono);animation:blink 2s infinite}
+.preview-body{display:grid;grid-template-columns:1fr 240px;gap:10px;padding:10px}
+.pvtiles{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px}
+.pvt{background:#1a1a2e;border-radius:10px;border:1.5px solid #2d2d45;min-height:90px;display:flex;align-items:center;justify-content:center;position:relative;flex-direction:column;gap:5px}
+.pvt.spk{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.2)}
+.pvt.dxt{background:#0a1628;border-color:#3b82f6;animation:tileGlow 2s ease-in-out infinite}
+.pvt-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff}
+.av-bl{background:var(--blue)}.av-pu{background:#7c3aed}.av-te{background:#0891b2}.av-or{background:#ea580c}
+.pvt-ft{position:absolute;bottom:0;left:0;right:0;padding:18px 9px 6px;background:linear-gradient(transparent,rgba(0,0,0,.7))}
+.pvt-ft span{color:#fff;font-size:10px;font-weight:600}
+.pvt-dex-bolt{font-size:20px}
+.pvt-dex-st{color:#60a5fa;font-size:10px;font-family:var(--mono)}
+
+.pv-panel{background:#0f1e35;border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.pv-pipe{background:#0a1628;border:1px solid var(--blue);border-radius:8px;overflow:hidden}
+.pv-pipe-hdr{background:var(--blue);padding:6px 10px;color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;gap:6px}
+.pv-steps{padding:7px 9px;display:flex;flex-direction:column;gap:4px}
+.pvps{display:flex;align-items:center;gap:7px;padding:4px 6px;border-radius:5px;background:#0f1e35;border:1px solid #1a3050;font-size:9px}
+.pvps.d{background:#052e16;border-color:#16a34a}
+.pvps-n{width:14px;height:14px;border-radius:50%;background:#16a34a;display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:#fff;font-family:var(--mono);flex-shrink:0}
+.pvps-l{color:#86efac;font-weight:600;font-family:var(--mono);min-width:26px}
+.pvps-d{color:#4ade80;font-size:8px;flex:1}
+.pv-resp{background:#0a1628;border:1.5px solid var(--blue);border-radius:8px;overflow:hidden}
+.pv-resp-hdr{background:var(--blue);padding:5px 10px;color:#fff;font-size:11px;font-weight:600}
+.pv-resp-body{padding:9px 11px}
+.pv-metric{color:#7fa8cc;font-size:9px;font-family:var(--mono);margin-bottom:3px}
+.pv-num{font-size:20px;font-weight:800;color:#fff}
+.pv-gr{display:inline-flex;align-items:center;background:#14532d;color:#4ade80;font-size:9px;padding:2px 7px;border-radius:20px;margin-left:7px}
+
+/* Features */
+.features-sec{padding:96px 0;background:#fff}
+.sec-wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+.sec-hdr{text-align:center;max-width:580px;margin:0 auto 52px}
+.sec-eye{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:12px}
+.sec-h2{font-size:40px;font-weight:800;color:var(--g900);letter-spacing:-1px;line-height:1.15;margin-bottom:14px}
+.sec-sub{font-size:17px;color:var(--g500);line-height:1.7}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.feat-card{padding:30px 26px;border:1px solid var(--g200);border-radius:var(--r-xl);transition:all .25s}
+.feat-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:transparent}
+.feat-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px}
+.fi-blue{background:var(--blue-lt)}.fi-green{background:var(--green-lt)}.fi-purple{background:#ede9fe}
+.feat-h3{font-size:19px;font-weight:700;color:var(--g900);margin-bottom:9px}
+.feat-p{font-size:15px;color:var(--g500);line-height:1.7}
+
+/* How it works */
+.hiw-sec{padding:96px 0;background:var(--g50)}
+.hiw-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;align-items:start;margin-top:48px}
+.hiw-card{background:#fff;border:1px solid var(--g200);border-radius:var(--r-lg);padding:24px 16px;text-align:center;position:relative;transition:all .25s}
+.hiw-card:hover{transform:translateY(-3px);box-shadow:var(--sh-md)}
+.hiw-card::after{content:'→';position:absolute;right:-16px;top:50%;transform:translateY(-50%);color:var(--g300);font-size:18px}
+.hiw-card:last-child::after{display:none}
+.hiw-n{width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin:0 auto 13px;font-family:var(--mono)}
+.hiw-title{font-size:16px;font-weight:700;color:var(--g900);margin-bottom:7px}
+.hiw-desc{font-size:13px;color:var(--g500);line-height:1.6;margin-bottom:9px}
+.hiw-tech{display:inline-flex;font-size:10px;padding:3px 9px;border-radius:6px;background:var(--blue-lt);color:var(--blue);font-family:var(--mono);font-weight:600}
+
+/* Pricing */
+.pricing-sec{padding:96px 0;background:#fff}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:800px;margin:48px auto 0}
+.pc{border:1px solid var(--g200);border-radius:var(--r-xl);padding:36px 30px;transition:all .25s}
+.pc:hover{transform:translateY(-3px);box-shadow:var(--sh-md)}
+.pc.feat{background:var(--blue);border-color:var(--blue);color:#fff}
+.pc-name{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--g400);margin-bottom:14px}
+.pc.feat .pc-name{color:rgba(255,255,255,.65)}
+.pc-price{display:flex;align-items:baseline;gap:4px;margin-bottom:6px}
+.pc-amount{font-size:52px;font-weight:800;color:var(--g900);letter-spacing:-2px}
+.pc.feat .pc-amount{color:#fff}
+.pc-period{font-size:15px;color:var(--g400)}
+.pc.feat .pc-period{color:rgba(255,255,255,.65)}
+.pc-trial{font-size:13px;color:var(--g400);margin-bottom:26px}
+.pc.feat .pc-trial{color:rgba(255,255,255,.65)}
+.pc-feats{margin-bottom:26px;display:flex;flex-direction:column;gap:10px}
+.pc-feats li{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--g700)}
+.pc.feat .pc-feats li{color:rgba(255,255,255,.9)}
+.pc-feats li::before{content:'✓';font-weight:700;color:var(--green);flex-shrink:0}
+.pc.feat .pc-feats li::before{color:#86efac}
+.pc.feat .btn-outline{border-color:rgba(255,255,255,.4);color:#fff}
+.pc.feat .btn-outline:hover{background:rgba(255,255,255,.12)}
+
+/* CTA strip */
+.cta-strip{background:linear-gradient(135deg,var(--blue-dk) 0%,var(--blue) 100%);padding:80px 0;text-align:center}
+.cta-h2{font-size:38px;font-weight:800;color:#fff;letter-spacing:-1px;margin-bottom:14px}
+.cta-sub{font-size:18px;color:rgba(255,255,255,.72);margin-bottom:34px}
+
+/* Footer */
+.footer{background:var(--g900);padding:60px 0 32px}
+.footer-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.footer-brand p{font-size:14px;color:var(--g400);line-height:1.7;margin-top:14px;max-width:260px}
+.footer-logo .logo-mark{width:30px;height:30px;font-size:13px}
+.footer-logo .logo-name{color:#fff;font-size:18px}
+.footer-col h4{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--g400);margin-bottom:16px}
+.footer-col a{display:block;color:var(--g500);font-size:14px;margin-bottom:10px;transition:color .2s}
+.footer-col a:hover{color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:26px;display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:13px;color:var(--g500)}
+
+/* ═══════════════════════════════════════════════
+   PAGE 2 — SIGN UP
+═══════════════════════════════════════════════ */
+.su-wrap{display:flex;min-height:100vh}
+.su-left{width:42%;background:linear-gradient(145deg,var(--blue-dk) 0%,var(--blue) 100%);padding:60px 52px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.su-left::before{content:'';position:absolute;top:-30%;right:-20%;width:480px;height:480px;background:radial-gradient(circle,rgba(255,255,255,.07),transparent);border-radius:50%;pointer-events:none}
+.su-tagline{font-size:33px;font-weight:800;color:#fff;line-height:1.25;letter-spacing:-.5px;margin-top:40px;margin-bottom:16px}
+.su-sub{font-size:15px;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:34px}
+.su-feat{display:flex;align-items:center;gap:11px;color:rgba(255,255,255,.8);font-size:14px;margin-bottom:11px}
+.su-dot{width:6px;height:6px;border-radius:50%;background:#60a5fa;flex-shrink:0}
+.su-right{flex:1;padding:60px 64px;background:#fff;display:flex;flex-direction:column;justify-content:center}
+.su-title{font-size:30px;font-weight:800;color:var(--g900);letter-spacing:-.5px;margin-bottom:6px}
+.su-desc{font-size:15px;color:var(--g500);margin-bottom:30px}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.su-footer{text-align:center;font-size:14px;color:var(--g500);margin-top:18px}
+.su-footer span{color:var(--blue);font-weight:600;cursor:pointer}
+
+/* ═══════════════════════════════════════════════
+   PAGE 3 — DASHBOARD
+═══════════════════════════════════════════════ */
+.db-page{display:flex;flex-direction:column;min-height:100vh;background:var(--g50)}
+.db-nav{background:#fff;border-bottom:1px solid var(--g200);padding:0 24px;display:flex;align-items:center;height:60px;position:sticky;top:0;z-index:50;gap:0}
+.db-nav-logo{margin-right:32px}
+.db-nav-links{display:flex;gap:2px;flex:1}
+.db-nl{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:var(--g500);padding:8px 13px;border-radius:var(--r);cursor:pointer;transition:all .2s}
+.db-nl:hover{color:var(--g900);background:var(--g100)}
+.db-nl.on{color:var(--blue);background:var(--blue-lt)}
+.db-nav-right{display:flex;align-items:center;gap:12px}
+.db-notif{width:36px;height:36px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:var(--g400);transition:all .2s}
+.db-notif:hover{background:var(--g100);color:var(--g700)}
+.db-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-dk));display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+
+.db-layout{display:flex;flex:1}
+.db-sidebar{width:64px;background:#fff;border-right:1px solid var(--g200);display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:5px}
+.sb-ic{width:44px;height:44px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;color:var(--g400);transition:all .2s}
+.sb-ic:hover{background:var(--g100);color:var(--g700)}
+.sb-ic.on{background:var(--blue-lt);color:var(--blue)}
+
+.db-main{flex:1;padding:32px 28px;overflow-y:auto}
+.db-welcome{margin-bottom:26px}
+.db-welcome h1{font-size:26px;font-weight:800;color:var(--g900);letter-spacing:-.5px}
+.db-welcome p{font-size:15px;color:var(--g500);margin-top:4px}
+
+.stat-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
+.sc{background:#fff;border:1px solid var(--g200);border-radius:var(--r-lg);padding:22px 22px 20px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--blue);border-radius:2px 2px 0 0}
+.sc-icon{position:absolute;top:20px;right:20px;font-size:26px;opacity:.2}
+.sc-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g500);margin-bottom:8px}
+.sc-num{font-size:36px;font-weight:800;color:var(--g900);letter-spacing:-1px;line-height:1}
+.sc-trend{font-size:13px;color:var(--green);font-weight:600;margin-top:6px}
+
+.start-bar{background:linear-gradient(135deg,var(--blue-dk) 0%,var(--blue) 100%);border-radius:var(--r-xl);padding:26px 30px;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;box-shadow:0 8px 32px rgba(26,86,160,.28)}
+.start-bar h3{font-size:19px;font-weight:700;color:#fff;margin-bottom:3px}
+.start-bar p{font-size:14px;color:rgba(255,255,255,.7)}
+.btn-wht{background:#fff;color:var(--blue);font-size:15px;font-weight:700;padding:11px 24px;border-radius:var(--r);border:none;cursor:pointer;transition:all .2s;font-family:inherit;white-space:nowrap}
+.btn-wht:hover{background:var(--g100);transform:translateY(-1px)}
+
+.db-grid{display:grid;grid-template-columns:1fr 300px;gap:18px}
+.db-card{background:#fff;border:1px solid var(--g200);border-radius:var(--r-lg);padding:22px;box-shadow:var(--sh)}
+.db-card-title{font-size:16px;font-weight:700;color:var(--g900);margin-bottom:16px}
+.db-card-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+
+.meetings-tbl{width:100%;border-collapse:collapse}
+.meetings-tbl th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g400);padding:8px 12px;text-align:left;border-bottom:1px solid var(--g200)}
+.meetings-tbl td{font-size:14px;color:var(--g700);padding:13px 12px;border-bottom:1px solid var(--g100);vertical-align:middle}
+.meetings-tbl tr:last-child td{border-bottom:none}
+.meetings-tbl tr:hover td{background:var(--g50)}
+.mtg-name{font-weight:600;color:var(--g900)}
+.mtg-date{font-size:13px;color:var(--g400)}
+.mtg-qs{display:inline-flex;align-items:center;background:var(--blue-lt);color:var(--blue);font-size:11px;font-weight:700;padding:3px 9px;border-radius:100px;font-family:var(--mono)}
+.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px}
+.dot-green{background:var(--green)}.dot-blue{background:var(--blue)}
+
+.app-list{display:flex;flex-direction:column;gap:10px}
+.app-row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border:1px solid var(--g200);border-radius:var(--r)}
+.app-row.conn{border-color:#bbf7d0;background:#f0fdf4}
+.app-row-l{display:flex;align-items:center;gap:11px}
+.app-ic{width:36px;height:36px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:16px}
+.app-nm{font-size:14px;font-weight:600;color:var(--g900)}
+.app-st{font-size:12px;color:var(--g400)}
+.app-row.conn .app-st{color:var(--green)}
+.conn-badge{font-size:11px;font-weight:700;color:var(--green);background:var(--green-lt);padding:3px 10px;border-radius:100px}
+
+/* ═══════════════════════════════════════════════
+   PAGE 4 — LIVE MEETING
+═══════════════════════════════════════════════ */
+.meet-wrap{display:flex;flex-direction:column;height:100vh;background:var(--dark);overflow:hidden}
+
+.m-topbar{height:52px;flex-shrink:0;background:var(--dark-deep);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:relative}
+.m-tb-left{display:flex;align-items:center;gap:11px}
+.m-logo-sm{width:26px;height:26px;background:var(--blue);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px}
+.m-title{font-size:14px;font-weight:600;color:#e5e7eb}
+.m-platform{font-size:10px;color:var(--g400)}
+.m-tb-center{position:absolute;left:50%;transform:translateX(-50%)}
+.m-timer{font-size:14px;color:var(--g400);font-family:var(--mono);letter-spacing:1px}
+.m-tb-right{display:flex;align-items:center;gap:12px}
+.rec-badge{background:rgba(220,38,38,.12);color:#f87171;border:1px solid rgba(220,38,38,.3);border-radius:100px;padding:3px 11px;font-size:11px;font-weight:700;font-family:var(--mono);animation:blink 2s infinite}
+
+.m-body{flex:1;display:flex;overflow:hidden;min-height:0}
+
+.m-video-area{flex:1;background:#0e0e1c;padding:12px;display:flex;flex-direction:column;gap:10px;min-height:0}
+.vgrid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;min-height:0}
+.vt{position:relative;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#18182e;border:1.5px solid #2d2d45;transition:border-color .3s,box-shadow .3s}
+.vt.spk{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.25)}
+.vt.dxt{background:#0a1628;border:2px solid #3b82f6;animation:tileGlow 2s ease-in-out infinite}
+.vt-bg{position:absolute;inset:0}
+.vt-center{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px}
+.vt-av{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#fff}
+.vt-ft{position:absolute;bottom:0;left:0;right:0;padding:28px 12px 9px;background:linear-gradient(transparent,rgba(0,0,0,.72));z-index:2}
+.vt-nr{display:flex;align-items:center;justify-content:space-between}
+.vt-nm{font-size:12px;font-weight:600;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.9)}
+.vt-mic{font-size:12px}
+.dex-bolt-lg{font-size:34px}
+.dex-lbl{font-size:14px;font-weight:700;color:#fff}
+.dex-st{color:#60a5fa;font-size:11px;font-family:var(--mono)}
+
+.ask-row{display:flex;gap:8px;flex-shrink:0}
+.ask-inp{flex:1;background:#2d2d45;border:1px solid #3d3d55;border-radius:var(--r);padding:9px 14px;color:#fff;font-size:14px;font-family:inherit;outline:none}
+.ask-inp::placeholder{color:#555}
+.ask-inp:focus{border-color:#3b82f6}
+.ask-btn{background:var(--blue);color:#fff;border:none;border-radius:var(--r);padding:9px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.ask-btn:hover{background:var(--blue-dk)}
+
+.dex-panel{width:336px;flex-shrink:0;background:#1e1e32;border-left:1px solid #2d2d45;display:flex;flex-direction:column;padding:13px;gap:9px;overflow-y:auto}
+.dex-panel-ttl{font-size:13px;font-weight:700;color:#93c5fd;display:flex;align-items:center;gap:8px;padding-bottom:9px;border-bottom:1px solid #3d3d55;flex-shrink:0}
+.q-bubble{background:#2d2d45;border-radius:var(--r);padding:10px 13px;color:#bbb;font-size:13px;font-style:italic}
+
+.pipe-box{background:#0a1628;border:1px solid var(--blue);border-radius:var(--r);overflow:hidden}
+.pipe-hdr{background:var(--blue);padding:8px 13px;display:flex;align-items:center;gap:7px;color:#fff;font-size:12px;font-weight:600}
+.pipe-body{padding:9px 11px;display:flex;flex-direction:column;gap:5px}
+.ps{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;background:#0f1e35;border:1px solid #1a3050;transition:all .3s;font-size:11px}
+.ps.act{background:#0f3d7a;border-color:#3b82f6}
+.ps.dn{background:#052e16;border-color:#16a34a}
+.ps-n{width:20px;height:20px;border-radius:50%;background:#1a3050;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#60a5fa;flex-shrink:0;font-family:var(--mono)}
+.ps.act .ps-n{background:var(--blue);color:#fff}
+.ps.dn .ps-n{background:var(--green);color:#fff}
+.ps-l{color:#7fa8cc;font-weight:600;font-family:var(--mono);min-width:36px;font-size:10px}
+.ps.act .ps-l{color:#93c5fd}.ps.dn .ps-l{color:#86efac}
+.ps-d{color:#4a6a8a;font-size:10px;flex:1}
+.ps.act .ps-d{color:#bfdbfe}.ps.dn .ps-d{color:#4ade80}
+.ps-tg{font-size:9px;padding:2px 5px;border-radius:5px;background:#1a3050;color:#60a5fa;font-family:var(--mono);flex-shrink:0}
+.ps.act .ps-tg{background:rgba(59,130,246,.2);color:#93c5fd}
+.ps.dn .ps-tg{background:rgba(22,163,74,.2);color:#86efac}
+
+.resp-box{background:#0a1628;border:1.5px solid var(--blue);border-radius:var(--r);overflow:hidden;transition:opacity .3s}
+.resp-hdr{background:var(--blue);padding:8px 13px;color:#fff;font-size:12px;font-weight:600}
+.resp-body{padding:13px}
+.r-metric{color:#7fa8cc;font-size:11px;font-family:var(--mono);margin-bottom:4px}
+.r-num{font-size:30px;font-weight:800;color:#fff}
+.r-gr{display:inline-flex;background:#14532d;color:#4ade80;font-size:11px;padding:3px 10px;border-radius:20px;margin-left:10px}
+.mini-bars{display:flex;align-items:flex-end;gap:6px;height:50px;margin-top:11px}
+.b-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+.bar{width:100%;border-radius:3px 3px 0 0}
+.b-lbl{color:#7fa8cc;font-size:9px;font-family:var(--mono)}
+
+.m-toolbar{height:66px;flex-shrink:0;background:var(--dark-deep);border-top:1px solid rgba(255,255,255,.06);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 24px}
+.tb-grp{display:flex;align-items:center;gap:2px}
+.tb-grp-r{justify-content:flex-end}
+.tb-ctr{display:flex;justify-content:center}
+.tb-b{display:flex;flex-direction:column;align-items:center;gap:3px;background:transparent;border:none;cursor:pointer;padding:8px 11px;border-radius:var(--r);transition:background .2s;font-family:inherit}
+.tb-b:hover{background:rgba(255,255,255,.08)}
+.tb-ico{font-size:19px;line-height:1;color:#e5e7eb}
+.tb-lbl{font-size:10px;color:#9ca3af;font-weight:500;white-space:nowrap}
+.tb-end{background:#dc2626;padding:10px 26px;border-radius:var(--r)}
+.tb-end:hover{background:#b91c1c}
+.tb-end .tb-ico{font-size:16px;font-weight:700;color:#fff}
+.tb-end .tb-lbl{color:#fff}
+
+.m-dots-row{height:36px;flex-shrink:0;background:var(--dark-deep);border-top:1px solid rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;gap:8px}
+.m-dots-row .nd{background:#3d3d55}
+.m-dots-row .nd.on{background:#3b82f6}
+
+/* ═══════════════════════════════════════════════
+   PAGE 5 — SUMMARY
+═══════════════════════════════════════════════ */
+.sum-page{background:var(--g50);min-height:100vh}
+.sum-nav{background:#fff;border-bottom:1px solid var(--g200);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.sum-content{max-width:840px;margin:0 auto;padding:36px 24px 80px}
+.sum-heading{margin-bottom:30px}
+.sum-heading h1{font-size:28px;font-weight:800;color:var(--g900);letter-spacing:-.5px;margin-bottom:4px}
+.sum-heading p{font-size:15px;color:var(--g500)}
+
+.sum-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
+.ss{background:#fff;border:1px solid var(--g200);border-radius:var(--r-lg);padding:24px 20px;text-align:center;box-shadow:var(--sh)}
+.ss-num{font-size:46px;font-weight:800;color:var(--blue);letter-spacing:-2px;line-height:1}
+.ss-lbl{font-size:14px;color:var(--g500);margin-top:6px}
+
+.sum-card{background:#fff;border:1px solid var(--g200);border-radius:var(--r-lg);padding:22px 24px;margin-bottom:18px;box-shadow:var(--sh)}
+.sum-card-title{font-size:17px;font-weight:700;color:var(--g900);margin-bottom:15px}
+.ptags{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.ptag{font-size:13px;padding:5px 14px;border-radius:100px;font-family:var(--mono);font-weight:600}
+.ptag-bl{background:var(--blue);color:#fff}
+.ptag-gn{background:var(--green);color:#fff}
+.ptag-ar{color:var(--g400);font-size:13px}
+
+.qa-list{display:flex;flex-direction:column;gap:11px}
+.qa{border-left:3px solid var(--blue);padding:13px 17px;background:var(--g50);border-radius:0 var(--r) var(--r) 0;transition:all .2s}
+.qa:hover{transform:translateX(4px);background:var(--blue-lt)}
+.qa-q{font-size:15px;font-weight:600;color:var(--g900);margin-bottom:5px}
+.qa-a{font-size:14px;color:var(--g600);line-height:1.5}
+.src{display:inline-flex;font-size:10px;padding:2px 8px;border-radius:7px;background:var(--blue-lt);color:var(--blue);font-weight:600;margin-left:6px;font-family:var(--mono)}
+
+.sum-actions{display:flex;gap:12px;justify-content:center;margin-top:30px}
+
+/* ═══════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════ */
+@keyframes tileGlow{0%,100%{box-shadow:0 0 8px rgba(59,130,246,.3)}50%{box-shadow:0 0 22px rgba(59,130,246,.65)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════ */
+@media(max-width:900px){
+  .hero-h1{font-size:36px}
+  .feat-grid{grid-template-columns:1fr}
+  .hiw-flow{grid-template-columns:1fr 1fr}
+  .hiw-card::after{display:none}
+  .pricing-grid{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .su-left{display:none}
+  .db-sidebar{display:none}
+  .db-grid{grid-template-columns:1fr}
+  .preview-body{grid-template-columns:1fr}
+  .pv-panel{display:none}
+  .m-body{flex-direction:column}
+  .dex-panel{width:100%;height:280px;border-left:none;border-top:1px solid #2d2d45}
+  .stat-cards{grid-template-columns:1fr}
+  .sum-stats{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .lp-links{display:none}
+  .hero-h1{font-size:28px}
+  .sec-h2{font-size:28px}
+  .hero-cta{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ── Fixed nav dots ── -->
+<div id="ndbar">
+  <button class="nd on"  onclick="go(1)"></button>
+  <button class="nd"     onclick="go(2)"></button>
+  <button class="nd"     onclick="go(3)"></button>
+  <button class="nd"     onclick="go(4)"></button>
+  <button class="nd"     onclick="go(5)"></button>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 1 — LANDING
+════════════════════════════════════════════ -->
+<div id="p1" class="page active">
+
+  <!-- Nav -->
+  <nav class="lp-nav">
+    <div class="lp-nav-inner">
+      <div class="logo">
+        <div class="logo-mark">⚡</div>
+        <span class="logo-name">Dex</span>
+      </div>
+      <div class="lp-links">
+        <a href="#">Features</a>
+        <a href="#">How it works</a>
+        <a href="#">Pricing</a>
+        <a href="#">Blog</a>
+      </div>
+      <div class="lp-actions">
+        <button class="btn btn-ghost btn-md" onclick="go(2)">Sign in</button>
+        <button class="btn btn-primary btn-md" onclick="go(2)">Get Started Free</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">✦ Now live for Microsoft Teams</div>
+      <h1 class="hero-h1">Your AI assistant for<br/><em>smarter</em> business meetings</h1>
+      <p class="hero-sub">Dex listens live, pulls real numbers from Xero &amp; Shopify, and answers your team's questions in under 2 seconds — right inside Microsoft Teams.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary btn-xl" onclick="go(2)">Get Started Free</button>
+        <button class="btn btn-outline btn-xl">Watch a demo ▶</button>
+      </div>
+      <p class="hero-proof">Trusted by <strong>400+ small businesses</strong> across Australia &amp; New Zealand</p>
+    </div>
+
+    <!-- App preview -->
+    <div class="preview-wrap">
+      <div class="preview-card">
+        <div class="preview-chrome">
+          <div class="chrome-dots">
+            <span style="background:#f87171"></span>
+            <span style="background:#fbbf24"></span>
+            <span style="background:#4ade80"></span>
+          </div>
+          <span class="preview-bar-title">Dex — Strategy Meeting: Q2 Review</span>
+          <span class="preview-rec">● REC 00:18:42</span>
+        </div>
+        <div class="preview-body">
+          <div class="pvtiles">
+            <div class="pvt spk">
+              <div class="pvt-av av-bl">O</div>
+              <div class="pvt-ft"><span>Oscar B.</span></div>
+            </div>
+            <div class="pvt">
+              <div class="pvt-av av-pu">N</div>
+              <div class="pvt-ft"><span>Nam N.</span></div>
+            </div>
+            <div class="pvt dxt">
+              <div class="pvt-dex-bolt">⚡</div>
+              <span class="pvt-dex-st">● Listening...</span>
+              <div class="pvt-ft"><span>Dex AI</span></div>
+            </div>
+            <div class="pvt">
+              <div class="pvt-av av-te">L</div>
+              <div class="pvt-ft"><span>Lingyang M.</span></div>
+            </div>
+          </div>
+          <div class="pv-panel">
+            <div class="pv-pipe">
+              <div class="pv-pipe-hdr">⚡ Dex AI Pipeline — Live</div>
+              <div class="pv-steps">
+                <div class="pvps d"><div class="pvps-n">1</div><span class="pvps-l">ASR</span><span class="pvps-d">Speech recognised</span></div>
+                <div class="pvps d"><div class="pvps-n">2</div><span class="pvps-l">LLM</span><span class="pvps-d">Intent → query Xero</span></div>
+                <div class="pvps d"><div class="pvps-n">3</div><span class="pvps-l">RAG</span><span class="pvps-d">Revenue fetched</span></div>
+                <div class="pvps d"><div class="pvps-n">4</div><span class="pvps-l">MCP</span><span class="pvps-d">Growth: +12.4%</span></div>
+                <div class="pvps d"><div class="pvps-n">5</div><span class="pvps-l">Reply</span><span class="pvps-d">Delivered &lt;2s</span></div>
+              </div>
+            </div>
+            <div class="pv-resp">
+              <div class="pv-resp-hdr">⚡ Dex — Live from Xero</div>
+              <div class="pv-resp-body">
+                <div class="pv-metric">Revenue — April 2026</div>
+                <div><span class="pv-num">$84,320</span><span class="pv-gr">▲ +12.4% vs Mar</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features-sec">
+    <div class="sec-wrap">
+      <div class="sec-hdr">
+        <div class="sec-eye">Why Dex?</div>
+        <h2 class="sec-h2">Everything your team needs in a meeting</h2>
+        <p class="sec-sub">Stop pausing meetings to look things up. Dex has the answers before you even finish the question.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-icon fi-blue">📊</div>
+          <h3 class="feat-h3">Live data from real APIs</h3>
+          <p class="feat-p">Dex fetches live revenue, orders, and cash flow from Xero and Shopify using Retrieval-Augmented Generation — no stale data, ever.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon fi-green">🤝</div>
+          <h3 class="feat-h3">Works inside Microsoft Teams</h3>
+          <p class="feat-p">No new app to install. Dex joins as a bot participant in your existing Teams meetings. Your team never changes their workflow.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon fi-purple">🧮</div>
+          <h3 class="feat-h3">Precise MCP calculations</h3>
+          <p class="feat-p">The Model Context Protocol runs a live calculator tool for percentages, growth rates, and forecasts — not estimates, exact figures.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="hiw-sec">
+    <div class="sec-wrap">
+      <div class="sec-hdr">
+        <div class="sec-eye">The AI pipeline</div>
+        <h2 class="sec-h2">From question to answer in under 2 seconds</h2>
+        <p class="sec-sub">Five specialised AI components work together in sequence every time someone speaks.</p>
+      </div>
+      <div class="hiw-flow">
+        <div class="hiw-card">
+          <div class="hiw-n">1</div>
+          <div class="hiw-title">ASR</div>
+          <p class="hiw-desc">Speech recognition converts spoken questions to text in real time</p>
+          <span class="hiw-tech">Whisper</span>
+        </div>
+        <div class="hiw-card">
+          <div class="hiw-n">2</div>
+          <div class="hiw-title">LLM</div>
+          <p class="hiw-desc">Large language model understands intent and decides what data is needed</p>
+          <span class="hiw-tech">GPT-4o</span>
+        </div>
+        <div class="hiw-card">
+          <div class="hiw-n">3</div>
+          <div class="hiw-title">RAG</div>
+          <p class="hiw-desc">Retrieval-Augmented Generation fetches live data from your connected APIs</p>
+          <span class="hiw-tech">APIs</span>
+        </div>
+        <div class="hiw-card">
+          <div class="hiw-n">4</div>
+          <div class="hiw-title">MCP</div>
+          <p class="hiw-desc">Model Context Protocol runs a calculator tool for precise figures</p>
+          <span class="hiw-tech">Tools</span>
+        </div>
+        <div class="hiw-card">
+          <div class="hiw-n">5</div>
+          <div class="hiw-title">Response</div>
+          <p class="hiw-desc">A natural-language answer is delivered back to the Teams meeting</p>
+          <span class="hiw-tech">&lt;2s</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="pricing-sec">
+    <div class="sec-wrap">
+      <div class="sec-hdr">
+        <div class="sec-eye">Pricing</div>
+        <h2 class="sec-h2">Simple, transparent pricing</h2>
+        <p class="sec-sub">Start free. Upgrade when you're ready. No lock-in contracts.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="pc">
+          <div class="pc-name">Free Trial</div>
+          <div class="pc-price"><span class="pc-amount">$0</span></div>
+          <div class="pc-trial">14 days · no credit card required</div>
+          <ul class="pc-feats">
+            <li>Up to 5 meetings</li>
+            <li>ASR + LLM pipeline</li>
+            <li>1 data source (Xero or Shopify)</li>
+            <li>Microsoft Teams bot</li>
+            <li>Meeting summary export</li>
+          </ul>
+          <button class="btn btn-primary btn-md btn-full" onclick="go(2)">Start free trial</button>
+        </div>
+        <div class="pc feat">
+          <div class="pc-name">Pro</div>
+          <div class="pc-price"><span class="pc-amount">$49</span><span class="pc-period">/month</span></div>
+          <div class="pc-trial">Per workspace · billed monthly</div>
+          <ul class="pc-feats">
+            <li>Unlimited meetings</li>
+            <li>Full ASR → LLM → RAG → MCP pipeline</li>
+            <li>All data sources (Xero, Shopify, GA)</li>
+            <li>Teams + Slack integration</li>
+            <li>Priority support &amp; SLA</li>
+            <li>Advanced analytics dashboard</li>
+          </ul>
+          <button class="btn btn-outline btn-md btn-full" onclick="go(2)">Get started</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA strip -->
+  <section class="cta-strip">
+    <div class="sec-wrap">
+      <h2 class="cta-h2">Ready to run smarter meetings?</h2>
+      <p class="cta-sub">Set up takes under 5 minutes. Your first meeting is free.</p>
+      <button class="btn-white btn-xl" onclick="go(2)" style="font-size:17px;padding:15px 36px;border-radius:14px">Get Started Free →</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo logo">
+            <div class="logo-mark">⚡</div>
+            <span class="logo-name w">Dex</span>
+          </div>
+          <p>AI-powered meeting assistant for small businesses. Real data, real answers, in real time.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#">Features</a>
+          <a href="#">Pricing</a>
+          <a href="#">Changelog</a>
+          <a href="#">Roadmap</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#">About</a>
+          <a href="#">Blog</a>
+          <a href="#">Careers</a>
+          <a href="#">Press</a>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <a href="#">Help centre</a>
+          <a href="#">Status</a>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2026 Dex Technologies Pty Ltd. All rights reserved.</span>
+        <div class="footer-logo logo">
+          <div class="logo-mark" style="width:26px;height:26px;font-size:12px">⚡</div>
+          <span class="logo-name w" style="font-size:16px">Dex</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 2 — SIGN UP
+════════════════════════════════════════════ -->
+<div id="p2" class="page">
+  <div class="su-wrap">
+    <div class="su-left">
+      <div class="logo">
+        <div class="logo-mark">⚡</div>
+        <span class="logo-name w">Dex</span>
+      </div>
+      <h2 class="su-tagline">AI answers for your business, live in every meeting</h2>
+      <p class="su-sub">Connect Xero and Shopify once. Dex handles the rest — fetching real numbers and delivering them the moment your team asks.</p>
+      <div class="su-feat"><div class="su-dot"></div>Live data from Xero &amp; Shopify via RAG</div>
+      <div class="su-feat"><div class="su-dot"></div>Works inside Microsoft Teams as a bot</div>
+      <div class="su-feat"><div class="su-dot"></div>MCP-powered precise calculations</div>
+      <div class="su-feat"><div class="su-dot"></div>Private &amp; secure by design</div>
+    </div>
+    <div class="su-right">
+      <h2 class="su-title">Create your account</h2>
+      <p class="su-desc">Free for 14 days — no credit card required.</p>
+      <div class="form-row-2">
+        <div class="fld"><label>First name</label><input class="inp" placeholder="Jane"/></div>
+        <div class="fld"><label>Last name</label><input class="inp" placeholder="Smith"/></div>
+      </div>
+      <div class="fld"><label>Work email</label><input class="inp" placeholder="jane@company.com"/></div>
+      <div class="fld"><label>Password</label><input class="inp" type="password" placeholder="Min. 8 characters"/></div>
+      <div class="fld"><label>Company name</label><input class="inp" placeholder="Acme Pty Ltd"/></div>
+      <button class="btn btn-primary btn-md btn-full" style="margin-top:6px;font-size:16px;padding:13px" onclick="go(3)">Create account →</button>
+      <div class="su-footer">Already have an account? <span onclick="go(3)">Sign in</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 3 — DASHBOARD
+════════════════════════════════════════════ -->
+<div id="p3" class="page">
+  <div class="db-page">
+    <!-- Top nav -->
+    <nav class="db-nav">
+      <div class="db-nav-logo logo">
+        <div class="logo-mark">⚡</div>
+        <span class="logo-name">Dex</span>
+      </div>
+      <div class="db-nav-links">
+        <div class="db-nl on">🏠 Dashboard</div>
+        <div class="db-nl">📅 Meetings</div>
+        <div class="db-nl">📊 Analytics</div>
+        <div class="db-nl">⚙️ Settings</div>
+      </div>
+      <div class="db-nav-right">
+        <div class="db-notif">🔔</div>
+        <div class="db-notif">❓</div>
+        <div class="db-av">J</div>
+      </div>
+    </nav>
+
+    <div class="db-layout">
+      <!-- Sidebar -->
+      <aside class="db-sidebar">
+        <div class="sb-ic on">🏠</div>
+        <div class="sb-ic">📅</div>
+        <div class="sb-ic">📊</div>
+        <div class="sb-ic">🔗</div>
+        <div class="sb-ic" style="margin-top:auto">⚙️</div>
+      </aside>
+
+      <!-- Main -->
+      <main class="db-main">
+        <div class="db-welcome">
+          <h1>Good morning, Jane ☀️</h1>
+          <p>Here's what's happening with your meetings this week.</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stat-cards">
+          <div class="sc">
+            <div class="sc-icon">📅</div>
+            <div class="sc-label">Meetings this week</div>
+            <div class="sc-num">4</div>
+            <div class="sc-trend">▲ 2 more than last week</div>
+          </div>
+          <div class="sc">
+            <div class="sc-icon">💬</div>
+            <div class="sc-label">Questions answered</div>
+            <div class="sc-num">31</div>
+            <div class="sc-trend">▲ 12% vs last week</div>
+          </div>
+          <div class="sc">
+            <div class="sc-icon">⚡</div>
+            <div class="sc-label">Avg response time</div>
+            <div class="sc-num">1.7s</div>
+            <div class="sc-trend">↓ 0.2s faster</div>
+          </div>
+        </div>
+
+        <!-- Start meeting bar -->
+        <div class="start-bar">
+          <div>
+            <h3>Ready to start a new meeting?</h3>
+            <p>Dex will join automatically and listen for questions in real time.</p>
+          </div>
+          <button class="btn-wht" onclick="go(4)">⚡ Start a new meeting</button>
+        </div>
+
+        <!-- Grid: meetings + apps -->
+        <div class="db-grid">
+          <div class="db-card">
+            <div class="db-card-hdr">
+              <div class="db-card-title">Recent meetings</div>
+              <button class="btn btn-ghost btn-sm">View all →</button>
+            </div>
+            <table class="meetings-tbl">
+              <thead>
+                <tr>
+                  <th>Meeting</th>
+                  <th>Date</th>
+                  <th>Q&amp;As</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="mtg-name">Strategy Meeting: Q2 Review</div><div class="mtg-date">45 min</div></td>
+                  <td>31 May 2026</td>
+                  <td><span class="mtg-qs">7 Q&amp;As</span></td>
+                  <td><span class="status-dot dot-green"></span>Complete</td>
+                </tr>
+                <tr>
+                  <td><div class="mtg-name">Weekly Sales Standup</div><div class="mtg-date">22 min</div></td>
+                  <td>28 May 2026</td>
+                  <td><span class="mtg-qs">4 Q&amp;As</span></td>
+                  <td><span class="status-dot dot-green"></span>Complete</td>
+                </tr>
+                <tr>
+                  <td><div class="mtg-name">Investor Update — May</div><div class="mtg-date">60 min</div></td>
+                  <td>24 May 2026</td>
+                  <td><span class="mtg-qs">12 Q&amp;As</span></td>
+                  <td><span class="status-dot dot-green"></span>Complete</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="db-card">
+            <div class="db-card-title">Connected apps</div>
+            <div class="app-list">
+              <div class="app-row conn">
+                <div class="app-row-l">
+                  <div class="app-ic" style="background:#e0f6fe">🟦</div>
+                  <div><div class="app-nm">Xero</div><div class="app-st">✓ Connected</div></div>
+                </div>
+                <span class="conn-badge">Live</span>
+              </div>
+              <div class="app-row conn">
+                <div class="app-row-l">
+                  <div class="app-ic" style="background:#eefcdb">🟩</div>
+                  <div><div class="app-nm">Shopify</div><div class="app-st">✓ Connected</div></div>
+                </div>
+                <span class="conn-badge">Live</span>
+              </div>
+              <div class="app-row">
+                <div class="app-row-l">
+                  <div class="app-ic" style="background:#fef9c3">🟨</div>
+                  <div><div class="app-nm">Google Analytics</div><div class="app-st">Not connected</div></div>
+                </div>
+                <button class="btn btn-outline btn-sm">Connect</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 4 — LIVE MEETING
+════════════════════════════════════════════ -->
+<div id="p4" class="page">
+  <div class="meet-wrap">
+
+    <!-- Top bar -->
+    <div class="m-topbar">
+      <div class="m-tb-left">
+        <div class="m-logo-sm">⚡</div>
+        <div>
+          <div class="m-title">Strategy Meeting: Q2 Review</div>
+          <div class="m-platform">Microsoft Teams</div>
+        </div>
+      </div>
+      <div class="m-tb-center">
+        <span class="m-timer">00:18:42</span>
+      </div>
+      <div class="m-tb-right">
+        <span class="rec-badge">● REC</span>
+        <span style="color:var(--g400);font-size:12px">👥 5</span>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="m-body">
+
+      <!-- Video grid + ask row -->
+      <div class="m-video-area">
+        <div class="vgrid">
+          <div class="vt spk">
+            <div class="vt-bg" style="background:linear-gradient(135deg,#1a2a3a,#0f1e2e)"></div>
+            <div class="vt-center"><div class="vt-av av-bl">O</div></div>
+            <div class="vt-ft"><div class="vt-nr"><span class="vt-nm">Oscar B.</span><span class="vt-mic">🎤</span></div></div>
+          </div>
+          <div class="vt">
+            <div class="vt-bg" style="background:linear-gradient(135deg,#1a1a2e,#0d0d1a)"></div>
+            <div class="vt-center"><div class="vt-av av-pu">N</div></div>
+            <div class="vt-ft"><div class="vt-nr"><span class="vt-nm">Nam N.</span><span class="vt-mic" style="opacity:.4">🔇</span></div></div>
+          </div>
+          <div class="vt dxt">
+            <div class="vt-center">
+              <div class="dex-bolt-lg">⚡</div>
+              <div class="dex-lbl">Dex</div>
+              <div class="dex-st" id="dex-st">● Listening...</div>
+            </div>
+            <div class="vt-ft"><div class="vt-nr"><span class="vt-nm">Dex AI Assistant</span></div></div>
+          </div>
+          <div class="vt">
+            <div class="vt-bg" style="background:linear-gradient(135deg,#0d1e20,#091515)"></div>
+            <div class="vt-center"><div class="vt-av av-te">L</div></div>
+            <div class="vt-ft"><div class="vt-nr"><span class="vt-nm">Lingyang M.</span><span class="vt-mic">🎤</span></div></div>
+          </div>
+        </div>
+        <div class="ask-row">
+          <input class="ask-inp" id="ask-inp" placeholder='Ask Dex anything — try "revenue", "orders", or "cash"'/>
+          <button class="ask-btn" onclick="askDex()">Ask Dex</button>
+        </div>
+      </div>
+
+      <!-- Dex panel -->
+      <div class="dex-panel">
+        <div class="dex-panel-ttl">⚡ Dex AI Panel</div>
+        <div class="q-bubble" id="q-disp">Oscar: "What was our revenue last month?"</div>
+        <div class="pipe-box">
+          <div class="pipe-hdr">⚡ AI Pipeline — Live</div>
+          <div class="pipe-body">
+            <div class="ps dn" id="ps1"><div class="ps-n">1</div><span class="ps-l">ASR</span><span class="ps-d">Speech recognised → text captured</span><span class="ps-tg">Whisper</span></div>
+            <div class="ps dn" id="ps2"><div class="ps-n">2</div><span class="ps-l">LLM</span><span class="ps-d">Intent detected → query Xero</span><span class="ps-tg">GPT-4o</span></div>
+            <div class="ps dn" id="ps3"><div class="ps-n">3</div><span class="ps-l">RAG</span><span class="ps-d">April revenue fetched from Xero API</span><span class="ps-tg">API</span></div>
+            <div class="ps dn" id="ps4"><div class="ps-n">4</div><span class="ps-l">MCP</span><span class="ps-d">Growth calculated: +12.4% vs March</span><span class="ps-tg">Calc</span></div>
+            <div class="ps dn" id="ps5"><div class="ps-n">5</div><span class="ps-l">Reply</span><span class="ps-d">Response delivered in Teams</span><span class="ps-tg">&lt;2s</span></div>
+          </div>
+        </div>
+        <div class="resp-box" id="resp-box">
+          <div class="resp-hdr">⚡ Dex — Live from Xero</div>
+          <div class="resp-body" id="resp-body">
+            <div class="r-metric">Revenue — April 2026</div>
+            <div><span class="r-num">$84,320</span><span class="r-gr">▲ +12.4% vs Mar</span></div>
+            <div class="mini-bars" id="bars"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="m-toolbar">
+      <div class="tb-grp">
+        <button class="tb-b"><div class="tb-ico">🎙️</div><div class="tb-lbl">Mute</div></button>
+        <button class="tb-b"><div class="tb-ico">📹</div><div class="tb-lbl">Video</div></button>
+        <button class="tb-b"><div class="tb-ico">🖥️</div><div class="tb-lbl">Share</div></button>
+        <button class="tb-b"><div class="tb-ico">😊</div><div class="tb-lbl">React</div></button>
+      </div>
+      <div class="tb-ctr">
+        <button class="tb-b tb-end" onclick="go(5)"><div class="tb-ico">✕</div><div class="tb-lbl">End Call</div></button>
+      </div>
+      <div class="tb-grp tb-grp-r">
+        <button class="tb-b"><div class="tb-ico">👥</div><div class="tb-lbl">People</div></button>
+        <button class="tb-b"><div class="tb-ico">💬</div><div class="tb-lbl">Chat</div></button>
+        <button class="tb-b"><div class="tb-ico" style="font-size:14px;letter-spacing:2px">•••</div><div class="tb-lbl">More</div></button>
+      </div>
+    </div>
+
+    <!-- Inline nav dots (dark) -->
+    <div class="m-dots-row">
+      <button class="nd" onclick="go(1)"></button>
+      <button class="nd" onclick="go(2)"></button>
+      <button class="nd" onclick="go(3)"></button>
+      <button class="nd on" onclick="go(4)"></button>
+      <button class="nd" onclick="go(5)"></button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 5 — SUMMARY
+════════════════════════════════════════════ -->
+<div id="p5" class="page">
+  <div class="sum-page">
+    <nav class="sum-nav">
+      <div class="logo">
+        <div class="logo-mark">⚡</div>
+        <span class="logo-name">Dex</span>
+      </div>
+      <button class="btn btn-ghost btn-md" onclick="go(3)">← Back to dashboard</button>
+    </nav>
+    <div class="sum-content">
+      <div class="sum-heading">
+        <h1>Meeting summary</h1>
+        <p>Strategy Meeting: Q2 Review &nbsp;·&nbsp; 31 May 2026, 10:00 am &nbsp;·&nbsp; Duration: 45 min</p>
+      </div>
+
+      <div class="sum-stats">
+        <div class="ss"><div class="ss-num">7</div><div class="ss-lbl">Questions answered</div></div>
+        <div class="ss"><div class="ss-num">2</div><div class="ss-lbl">Data sources used</div></div>
+        <div class="ss"><div class="ss-num">1.8s</div><div class="ss-lbl">Avg response time</div></div>
+      </div>
+
+      <div class="sum-card">
+        <div class="sum-card-title">AI pipeline used this meeting</div>
+        <div class="ptags">
+          <span class="ptag ptag-bl">ASR → Text</span>
+          <span class="ptag-ar">→</span>
+          <span class="ptag ptag-bl">LLM Intent</span>
+          <span class="ptag-ar">→</span>
+          <span class="ptag ptag-bl">RAG Fetch</span>
+          <span class="ptag-ar">→</span>
+          <span class="ptag ptag-bl">MCP Compute</span>
+          <span class="ptag-ar">→</span>
+          <span class="ptag ptag-gn">Response ✓</span>
+        </div>
+      </div>
+
+      <div class="sum-card">
+        <div class="sum-card-hdr" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div class="sum-card-title" style="margin-bottom:0">Questions &amp; answers</div>
+          <button class="btn btn-outline btn-sm">↓ Export PDF</button>
+        </div>
+        <div class="qa-list">
+          <div class="qa">
+            <div class="qa-q">What was our revenue last month?</div>
+            <div class="qa-a">$84,320 — up 12.4% vs March <span class="src">Xero</span><span class="src">MCP calc</span></div>
+          </div>
+          <div class="qa">
+            <div class="qa-q">How many orders did we process in April?</div>
+            <div class="qa-a">1,204 orders — average order value $70.03 <span class="src">Shopify</span></div>
+          </div>
+          <div class="qa">
+            <div class="qa-q">What is our top selling product this quarter?</div>
+            <div class="qa-a">Product X — 342 units sold, $24,150 revenue <span class="src">Shopify</span></div>
+          </div>
+          <div class="qa">
+            <div class="qa-q">What is our current cash position?</div>
+            <div class="qa-a">$142,800 available — 18 days of runway <span class="src">Xero</span><span class="src">MCP calc</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sum-actions">
+        <button class="btn btn-primary btn-lg" onclick="go(4)">⚡ Start a new meeting</button>
+        <button class="btn btn-outline btn-lg" onclick="go(3)">← Back to dashboard</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var cur = 1;
+
+function go(n) {
+  document.getElementById('p' + cur).classList.remove('active');
+  document.getElementById('p' + n).classList.add('active');
+  cur = n;
+  window.scrollTo(0, 0);
+
+  // Update fixed nav dots
+  var ndbar = document.getElementById('ndbar');
+  var nds = ndbar.querySelectorAll('.nd');
+  nds.forEach(function(d, i) { d.classList.toggle('on', i === n - 1); });
+
+  // Toggle dark + visibility for meeting page
+  if (n === 4) {
+    ndbar.style.display = 'none';
+    // Update inline meeting dots
+    var mds = document.querySelectorAll('.m-dots-row .nd');
+    mds.forEach(function(d, i) { d.classList.toggle('on', i === n - 1); });
+    initBars();
+  } else {
+    ndbar.style.display = 'flex';
+    ndbar.classList.remove('dark');
+  }
+}
+
+/* ── Pipeline responses ── */
+var RESP = {
+  revenue: {
+    q: 'Oscar: "What was our revenue last month?"',
+    label: 'Revenue — April 2026', num: '$84,320', growth: '▲ +12.4% vs Mar',
+    source: 'Xero', ragDesc: 'April revenue fetched from Xero API', mcpDesc: 'Growth calculated: +12.4% vs March'
+  },
+  orders: {
+    q: 'Nam: "How many orders did we process?"',
+    label: 'Orders — April 2026', num: '1,204', growth: '▲ +8.2% vs Mar',
+    source: 'Shopify', ragDesc: 'April orders fetched from Shopify API', mcpDesc: 'Avg order value calculated: $70.03'
+  },
+  cash: {
+    q: 'Oscar: "What is our current cash position?"',
+    label: 'Cash position — today', num: '$142,800', growth: '18 days runway',
+    source: 'Xero', ragDesc: 'Cash balance fetched from Xero API', mcpDesc: 'Runway days computed: 18 days'
+  }
+};
+
+function resetPipeline() {
+  for (var i = 1; i <= 5; i++) {
+    var el = document.getElementById('ps' + i);
+    if (el) el.classList.remove('act', 'dn');
+  }
+}
+
+function animatePipeline(r, cb) {
+  resetPipeline();
+  var descs = [
+    'Speech recognised → text captured',
+    'Intent detected → query ' + r.source,
+    r.ragDesc, r.mcpDesc,
+    'Response delivered in Teams'
+  ];
+  var step = 1;
+  function next() {
+    if (step > 5) { if (cb) cb(); return; }
+    var el = document.getElementById('ps' + step);
+    if (el) {
+      el.classList.add('act');
+      var d = el.querySelector('.ps-d');
+      if (d) d.textContent = descs[step - 1];
+      if (step > 1) {
+        var prev = document.getElementById('ps' + (step - 1));
+        if (prev) { prev.classList.remove('act'); prev.classList.add('dn'); }
+      }
+    }
+    step++;
+    setTimeout(next, step === 6 ? 500 : 400);
+  }
+  next();
+}
+
+function askDex() {
+  var inp = document.getElementById('ask-inp');
+  var val = inp.value.toLowerCase().trim();
+  var r = RESP.revenue;
+  if (val.indexOf('order') !== -1 || val.indexOf('shopify') !== -1) r = RESP.orders;
+  else if (val.indexOf('cash') !== -1 || val.indexOf('runway') !== -1) r = RESP.cash;
+
+  document.getElementById('dex-st').textContent = '● Thinking...';
+  document.getElementById('q-disp').textContent = val ? 'You: "' + inp.value + '"' : r.q;
+  document.getElementById('resp-box').style.opacity = '.4';
+  document.getElementById('resp-body').innerHTML = '<div style="color:#7fa8cc;font-size:11px;padding:8px 0;font-family:monospace">Processing...</div>';
+  inp.value = '';
+
+  animatePipeline(r, function() {
+    document.getElementById('dex-st').textContent = '● Responding...';
+    document.getElementById('resp-box').style.opacity = '1';
+    document.getElementById('resp-body').innerHTML =
+      '<div class="r-metric">' + r.label + '</div>' +
+      '<div><span class="r-num">' + r.num + '</span><span class="r-gr">' + r.growth + '</span></div>' +
+      '<div class="mini-bars" id="bars"></div>';
+    initBars();
+    setTimeout(function() {
+      document.getElementById('dex-st').textContent = '● Listening...';
+      var last = document.getElementById('ps5');
+      if (last) { last.classList.remove('act'); last.classList.add('dn'); }
+    }, 1600);
+  });
+}
+
+var barData = [
+  {h:55,m:'Dec'},{h:62,m:'Jan'},{h:70,m:'Feb'},{h:68,m:'Mar'},{h:84,m:'Apr'}
+];
+
+function initBars() {
+  var el = document.getElementById('bars');
+  if (!el) return;
+  el.innerHTML = barData.map(function(b, i) {
+    return '<div class="b-wrap"><div class="bar" style="height:' + b.h + '%;background:' +
+      (i === 4 ? '#3b82f6' : '#2a4a70') + '"></div><div class="b-lbl">' + b.m + '</div></div>';
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  initBars();
+  var inp = document.getElementById('ask-inp');
+  if (inp) inp.addEventListener('keydown', function(e) { if (e.key === 'Enter') askDex(); });
+});
+</script>
+</body>
+</html>
