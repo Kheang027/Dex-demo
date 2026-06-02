@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Dex — AI Meeting Assistant</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="styles.css"/>
+<link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
@@ -102,34 +102,100 @@
 
 <!-- SCREEN 3: MEETING -->
 <div id="s3" class="screen screen-dark">
-  <div class="meeting-header">
-    <span class="meeting-title">Microsoft Teams — Strategy Meeting: Q2 Review</span>
-    <span class="rec">● REC 00:18:42</span>
-  </div>
-  <div class="meeting-body">
-    <div class="left-panel">
-      <div class="tiles">
-        <div class="tile"><div class="avatar av-blue">O</div><div class="tile-name">Oscar B.</div></div>
-        <div class="tile"><div class="avatar av-purple">N</div><div class="tile-name">Nam N.</div></div>
-        <div class="tile tile-dex">
-          <div class="dex-bolt">⚡</div>
-          <div class="dex-name">Dex</div>
-          <div class="dex-status" id="dex-status">● Listening...</div>
-        </div>
-        <div class="tile"><div class="avatar av-teal">L</div><div class="tile-name">Lingyang M.</div></div>
-      </div>
-      <div class="ask-row">
-        <input class="ask-input" id="ask-input" placeholder='Try: "What was our revenue last month?"'/>
-        <button class="ask-btn" onclick="askDex()">Ask Dex</button>
-      </div>
-      <div class="meeting-footer">
-        <button class="ctrl">Mute</button>
-        <button class="ctrl">Camera off</button>
-        <button class="ctrl ctrl-end" onclick="go(4)">End &amp; view summary</button>
+
+  <!-- TOP BAR -->
+  <div class="meet-topbar">
+    <div class="meet-topbar-left">
+      <div class="logo-icon meet-logo-icon">⚡</div>
+      <div class="meet-title-group">
+        <span class="meet-name">Strategy Meeting: Q2 Review</span>
+        <span class="meet-platform">Microsoft Teams</span>
       </div>
     </div>
-    <div class="right-panel">
+    <div class="meet-topbar-center">
+      <span class="meet-timer">00:18:42</span>
+    </div>
+    <div class="meet-topbar-right">
+      <div class="rec-pill">● REC</div>
+      <div class="participant-pill">👥 4</div>
+    </div>
+  </div>
+
+  <!-- MAIN BODY -->
+  <div class="meet-body">
+
+    <!-- VIDEO GRID -->
+    <div class="video-area">
+      <div class="video-grid">
+
+        <div class="vtile vtile-speaking">
+          <div class="vtile-bg" style="background:linear-gradient(135deg,#1a2a3a,#0f1e2e)"></div>
+          <div class="vtile-center">
+            <div class="vtile-avatar av-blue">O</div>
+          </div>
+          <div class="vtile-footer">
+            <div class="vtile-name-row">
+              <span class="vtile-name">Oscar B.</span>
+              <span class="vtile-mic">🎤</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="vtile">
+          <div class="vtile-bg" style="background:linear-gradient(135deg,#1a1a2e,#0d0d1a)"></div>
+          <div class="vtile-center">
+            <div class="vtile-avatar av-purple">N</div>
+          </div>
+          <div class="vtile-footer">
+            <div class="vtile-name-row">
+              <span class="vtile-name">Nam N.</span>
+              <span class="vtile-mic muted">🔇</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="vtile vtile-dex-tile">
+          <div class="vtile-center">
+            <div class="dex-bolt-xl">⚡</div>
+            <div class="dex-label-xl">Dex</div>
+            <div class="dex-status" id="dex-status">● Listening...</div>
+          </div>
+          <div class="vtile-footer">
+            <div class="vtile-name-row">
+              <span class="vtile-name">Dex AI Assistant</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="vtile">
+          <div class="vtile-bg" style="background:linear-gradient(135deg,#0d1e20,#091515)"></div>
+          <div class="vtile-center">
+            <div class="vtile-avatar av-teal">L</div>
+          </div>
+          <div class="vtile-footer">
+            <div class="vtile-name-row">
+              <span class="vtile-name">Lingyang M.</span>
+              <span class="vtile-mic">🎤</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DEX AI PANEL -->
+    <div class="dex-panel">
+      <div class="dex-panel-title">
+        <span>⚡</span><span>Dex AI Panel</span>
+      </div>
+
+      <div class="ask-row">
+        <input class="ask-input" id="ask-input" placeholder='Ask Dex anything...'/>
+        <button class="ask-btn" onclick="askDex()">Ask</button>
+      </div>
+
       <div class="question-bubble" id="question-display">Oscar: "What was our revenue last month?"</div>
+
       <div class="pipeline-box">
         <div class="pipeline-header">
           <span>⚡</span>
@@ -143,6 +209,7 @@
           <div class="pipeline-step ps-done" id="pstep-5"><div class="ps-num">5</div><span class="ps-label">Reply</span><span class="ps-desc">Response delivered in Teams</span><span class="ps-tag">&lt;2s</span></div>
         </div>
       </div>
+
       <div class="response-box" id="response-box">
         <div class="response-header">⚡ Dex — Live from Xero</div>
         <div class="response-body" id="dex-response">
@@ -152,7 +219,30 @@
         </div>
       </div>
     </div>
+
+  </div><!-- /meet-body -->
+
+  <!-- BOTTOM TOOLBAR -->
+  <div class="meet-toolbar">
+    <div class="tb-group">
+      <button class="tb-btn"><div class="tb-icon">🎙️</div><div class="tb-label">Mute</div></button>
+      <button class="tb-btn"><div class="tb-icon">📹</div><div class="tb-label">Video</div></button>
+      <button class="tb-btn"><div class="tb-icon">🖥️</div><div class="tb-label">Share</div></button>
+      <button class="tb-btn"><div class="tb-icon">😊</div><div class="tb-label">Reactions</div></button>
+    </div>
+    <div class="tb-center">
+      <button class="tb-btn tb-end" onclick="go(4)">
+        <div class="tb-icon tb-end-icon">✕</div>
+        <div class="tb-label">End Call</div>
+      </button>
+    </div>
+    <div class="tb-group tb-group-right">
+      <button class="tb-btn"><div class="tb-icon">👥</div><div class="tb-label">Participants</div></button>
+      <button class="tb-btn"><div class="tb-icon">💬</div><div class="tb-label">Chat</div></button>
+      <button class="tb-btn"><div class="tb-icon tb-more">•••</div><div class="tb-label">More</div></button>
+    </div>
   </div>
+
 </div>
 
 <!-- SCREEN 4: SUMMARY -->
