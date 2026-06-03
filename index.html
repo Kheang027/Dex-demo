@@ -1,309 +1,726 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Dex — AI Meeting Assistant</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dex — AI Meeting Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
-<!-- SCREEN 1: SIGN UP -->
-<div id="s1" class="screen active">
-  <div class="split">
-    <div class="left">
-      <div class="logo-wrap">
-        <div class="logo-icon">⚡</div>
-        <span class="logo-text-white">Dex</span>
-      </div>
-      <div class="tagline">Your AI meeting assistant for smarter business decisions</div>
-      <div class="sub">Connect your business data and let Dex answer questions live — using ASR, LLM, RAG and MCP.</div>
-      <div class="feat"><div class="feat-dot"></div>Live data from Xero &amp; Shopify via RAG</div>
-      <div class="feat"><div class="feat-dot"></div>Works inside Microsoft Teams as a bot</div>
-      <div class="feat"><div class="feat-dot"></div>MCP-powered precise calculations</div>
-      <div class="feat"><div class="feat-dot"></div>Private &amp; secure by design</div>
-    </div>
-    <div class="right">
-      <h2 class="form-title">Create your account</h2>
-      <p class="form-sub">Free for 14 days — no credit card required.</p>
-      <div class="form-row">
-        <div class="field"><label>First name</label><input class="input-field" placeholder="Jane"/></div>
-        <div class="field"><label>Last name</label><input class="input-field" placeholder="Smith"/></div>
-      </div>
-      <div class="field"><label>Work email</label><input class="input-field" placeholder="jane@company.com"/></div>
-      <div class="field"><label>Password</label><input class="input-field" type="password" placeholder="Min. 8 characters"/></div>
-      <div class="field"><label>Company name</label><input class="input-field" placeholder="Acme Pty Ltd"/></div>
-      <button class="btn-primary" onclick="go(2)">Create account →</button>
-      <div class="signin-text">Already have an account? <span class="link" onclick="go(2)">Sign in</span></div>
-    </div>
-  </div>
-  <div class="nav-dots">
-    <button class="dot active" onclick="go(1)"></button>
-    <button class="dot" onclick="go(2)"></button>
-    <button class="dot" onclick="go(3)"></button>
-    <button class="dot" onclick="go(4)"></button>
-  </div>
+<!-- ══════════════════════════════════════════
+     FIXED NAV DOTS
+══════════════════════════════════════════ -->
+<div id="ndbar">
+  <button class="nd on" onclick="go(1)"></button>
+  <button class="nd"    onclick="go(2)"></button>
+  <button class="nd"    onclick="go(3)"></button>
+  <button class="nd"    onclick="go(4)"></button>
+  <button class="nd"    onclick="go(5)"></button>
 </div>
 
-<!-- SCREEN 2: CONNECT APPS -->
-<div id="s2" class="screen">
-  <div class="nav-bar">
-    <div class="logo"><div class="logo-icon">⚡</div><span class="logo-text">Dex</span></div>
-    <span class="step-label-text">Setup — Step 2 of 4</span>
-  </div>
-  <div class="step-bar">
-    <div class="step done">1 Sign up</div>
-    <div class="step active">2 Connect apps</div>
-    <div class="step">3 Add to Teams</div>
-    <div class="step">4 Start meeting</div>
-  </div>
-  <div class="page-body">
-    <div class="page-title">Connect your business tools</div>
-    <div class="page-sub">Dex uses <strong>RAG</strong> to fetch live data from these sources during your meetings.</div>
-    <div class="apps">
-      <div class="app-card xero" id="xero-card">
-        <div class="app-header">Xero <span class="badge badge-blue">Finance</span></div>
-        <div class="app-body">
-          <div class="app-desc">Revenue, invoices, cash flow — pulled live via Xero API using RAG retrieval.</div>
-          <button class="btn-connect btn-blue" id="xero-btn" onclick="connectApp('xero')">Connect Xero</button>
+<!-- ══════════════════════════════════════════
+     PAGE 1 — LANDING
+══════════════════════════════════════════ -->
+<div id="p1" class="page active">
+
+  <!-- Nav -->
+  <nav class="lp-nav">
+    <div class="lp-nav-inner">
+      <div class="logo" onclick="go(1)">
+        <div class="logo-mark">⚡</div>
+        <span class="logo-name">Dex</span>
+      </div>
+      <div class="lp-links">
+        <a href="#features-sec">Features</a>
+        <a href="#hiw-sec">How it works</a>
+        <a href="#pricing-sec">Pricing</a>
+      </div>
+      <div class="lp-nav-cta">
+        <button class="btn btn-ghost btn-sm" onclick="go(2)">Sign in</button>
+        <button class="btn btn-primary"      onclick="go(2)">Get Started Free</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Now live in Microsoft Teams
+      </div>
+      <h1 class="hero-h1">Answer any business question — <em>live in your meeting</em></h1>
+      <p class="hero-sub">Dex sits inside Microsoft Teams as an AI bot. Ask a question mid-meeting and Dex instantly fetches live data from Xero and Shopify — revenue, orders, cash flow — and speaks the answer aloud.</p>
+      <div class="hero-cta">
+        <button class="btn btn-white btn-lg" onclick="go(2)">Get Started Free</button>
+        <button class="btn btn-outline btn-lg"
+          style="color:#fff;border-color:rgba(255,255,255,.4);font-size:17px;padding:14px 32px;border-radius:16px"
+          onclick="document.getElementById('hiw-sec').scrollIntoView({behavior:'smooth'})">
+          See how it works →
+        </button>
+      </div>
+      <p class="hero-proof-txt">Free 14-day trial · No credit card required · Setup in 5 minutes</p>
+    </div>
+
+    <!-- App preview mockup -->
+    <div class="preview-outer">
+      <div class="preview-glow"></div>
+      <div class="preview-shell">
+        <div class="preview-chrome">
+          <div class="chrome-dots">
+            <span style="background:#ff5f57"></span>
+            <span style="background:#febc2e"></span>
+            <span style="background:#28c840"></span>
+          </div>
+          <div class="chrome-addr">teams.microsoft.com · Dex AI Meeting</div>
+          <div class="chrome-rec"><span class="chrome-rec-dot"></span>REC 00:14:32</div>
+        </div>
+        <div class="preview-body">
+          <div class="pv-tiles">
+            <div class="pvt spk">
+              <div class="pvt-av av-bl">OB</div>
+              <div class="pvt-name"><span>Oscar B.</span></div>
+            </div>
+            <div class="pvt">
+              <div class="pvt-av av-pu">NN</div>
+              <div class="pvt-name"><span>Nam N.</span></div>
+            </div>
+            <div class="pvt">
+              <div class="pvt-av av-te">LM</div>
+              <div class="pvt-name"><span>Lingyang M.</span></div>
+            </div>
+            <div class="pvt dxt">
+              <div class="pvt-bolt">⚡</div>
+              <div class="pvt-dex-st">● Listening...</div>
+              <div class="pvt-name"><span>Dex AI</span></div>
+            </div>
+          </div>
+          <div class="pv-panel">
+            <div class="pvp-hdr">⚡ Dex — Live from Xero</div>
+            <div class="pvp-steps">
+              <div class="pvps dn"><span class="pvps-n">✓</span><span class="pvps-l">ASR</span><span class="pvps-d">Speech captured</span></div>
+              <div class="pvps dn"><span class="pvps-n">✓</span><span class="pvps-l">LLM</span><span class="pvps-d">Intent: revenue query</span></div>
+              <div class="pvps dn"><span class="pvps-n">✓</span><span class="pvps-l">RAG</span><span class="pvps-d">Fetched from Xero API</span></div>
+              <div class="pvps dn"><span class="pvps-n">✓</span><span class="pvps-l">MCP</span><span class="pvps-d">+12.4% calculated</span></div>
+              <div class="pvps dn"><span class="pvps-n">✓</span><span class="pvps-l">Reply</span><span class="pvps-d">Delivered in Teams</span></div>
+            </div>
+            <div class="pvp-resp">
+              <div class="pvp-resp-hdr">Revenue — April 2026</div>
+              <div class="pvp-resp-body">
+                <div class="pvp-metric">MONTHLY REVENUE · XERO API</div>
+                <div><span class="pvp-num">$84,320</span><span class="pvp-gr">▲ +12.4%</span></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="app-card shopify" id="shopify-card">
-        <div class="app-header">Shopify <span class="badge badge-green">E-commerce</span></div>
-        <div class="app-body">
-          <div class="app-desc">Orders, sales performance, top products — retrieved in real time during meetings.</div>
-          <button class="btn-connect btn-blue" id="shopify-btn" onclick="connectApp('shopify')">Connect Shopify</button>
+    </div>
+  </section>
+
+  <!-- Social proof -->
+  <div class="proof-bar">
+    <div class="proof-inner">
+      <div class="proof-lbl">Trusted by 500+ small businesses</div>
+      <div class="proof-logos">
+        <div class="proof-logo">TrueNorth Co.</div>
+        <div class="proof-logo">PeakRetail</div>
+        <div class="proof-logo">Stratum Labs</div>
+        <div class="proof-logo">Vantage Group</div>
+        <div class="proof-logo">Cleo &amp; Co</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="features-sec" id="features-sec">
+    <div class="wrap">
+      <div class="sec-hdr">
+        <div class="sec-eye">Features</div>
+        <h2 class="sec-h2">Everything you need to run a smarter meeting</h2>
+        <p class="sec-sub">Dex is the only AI assistant built specifically for small business meetings — connecting your live conversation to your actual business data.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <div class="feat-icon">🎙️</div>
+          <div class="feat-title">Live Meeting Intelligence</div>
+          <p class="feat-desc">Dex joins your Microsoft Teams call as a native bot, listens in real-time, and detects when someone asks a business question — no manual activation needed.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🔗</div>
+          <div class="feat-title">RAG-Powered Data Retrieval</div>
+          <p class="feat-desc">The moment a question is detected, Dex uses Retrieval-Augmented Generation to fetch live data directly from your Xero or Shopify account via secure API calls.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">⚙️</div>
+          <div class="feat-title">MCP Precision Calculations</div>
+          <p class="feat-desc">Dex uses Model Context Protocol to run exact calculations — growth rates, runway days, average order value — so every figure spoken in the meeting is verified and precise.</p>
         </div>
       </div>
-      <div class="app-card ga" id="ga-card">
-        <div class="app-header">Google Analytics <span class="badge badge-amber">Analytics</span></div>
-        <div class="app-body">
-          <div class="app-desc">Website traffic and conversion metrics — available as an additional RAG data source.</div>
-          <button class="btn-connect btn-blue" id="ga-btn" onclick="connectApp('ga')">Connect GA</button>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="hiw-sec" id="hiw-sec">
+    <div class="wrap">
+      <div class="sec-hdr">
+        <div class="sec-eye">How it works</div>
+        <h2 class="sec-h2">From spoken question to live answer in under 2 seconds</h2>
+        <p class="sec-sub">Dex runs a 5-stage AI pipeline the moment a question is asked — completely invisible to participants.</p>
+      </div>
+      <div class="hiw-row">
+        <div class="hiw-step">
+          <div class="hiw-num">1</div>
+          <div class="hiw-label">ASR</div>
+          <div class="hiw-title">Speech Recognition</div>
+          <p class="hiw-desc">Whisper ASR transcribes the meeting in real-time and detects question intent from natural conversation.</p>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">2</div>
+          <div class="hiw-label">LLM</div>
+          <div class="hiw-title">Intent Analysis</div>
+          <p class="hiw-desc">GPT-4 classifies the question — revenue, orders, cash flow — and determines which data source to query.</p>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">3</div>
+          <div class="hiw-label">RAG</div>
+          <div class="hiw-title">Live Data Fetch</div>
+          <p class="hiw-desc">Dex calls the Xero or Shopify API in real-time and retrieves the exact figures needed for the answer.</p>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">4</div>
+          <div class="hiw-label">MCP</div>
+          <div class="hiw-title">Precision Compute</div>
+          <p class="hiw-desc">Model Context Protocol runs calculations — growth percentages, cash runway, averages — with full accuracy.</p>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-num">5</div>
+          <div class="hiw-label">Reply</div>
+          <div class="hiw-title">Spoken Response</div>
+          <p class="hiw-desc">Dex delivers the answer as a voice reply in the Teams call and displays it as a card on all screens.</p>
         </div>
       </div>
     </div>
-    <div class="how-it-works">
-      <div class="how-title">⚡ How Dex works — the AI pipeline</div>
-      <div class="how-grid">
-        <div class="how-step-card"><div class="how-num">1</div><h4>ASR</h4><p>Speech recognition converts spoken questions to text in real time</p><span class="tech-tag">Whisper</span></div>
-        <div class="how-step-card"><div class="how-num">2</div><h4>LLM</h4><p>Large language model understands intent and identifies what data is needed</p><span class="tech-tag">GPT-4</span></div>
-        <div class="how-step-card"><div class="how-num">3</div><h4>RAG</h4><p>Retrieval-Augmented Generation fetches live data from Xero &amp; Shopify APIs</p><span class="tech-tag">API</span></div>
-        <div class="how-step-card"><div class="how-num">4</div><h4>MCP</h4><p>Model Context Protocol runs a calculator tool to compute precise figures</p><span class="tech-tag">Tools</span></div>
-        <div class="how-step-card"><div class="how-num">5</div><h4>Response</h4><p>LLM generates a natural language answer delivered inside Teams</p><span class="tech-tag">&lt;2s</span></div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="pricing-sec" id="pricing-sec">
+    <div class="wrap">
+      <div class="sec-hdr">
+        <div class="sec-eye">Pricing</div>
+        <h2 class="sec-h2">Simple, transparent pricing</h2>
+        <p class="sec-sub">Start free. Upgrade when you're ready. No hidden fees, no per-seat surprises.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-name">Free Trial</div>
+          <div style="font-size:15px;color:var(--g500);margin-bottom:6px">Try Dex for 14 days</div>
+          <div class="price-amt"><span>$</span>0</div>
+          <div class="price-per">14 days · no credit card required</div>
+          <div class="price-feats">
+            <div class="price-feat">Up to 10 meetings during trial</div>
+            <div class="price-feat">1 integration (Xero or Shopify)</div>
+            <div class="price-feat">Live Q&amp;A in Microsoft Teams</div>
+            <div class="price-feat">Meeting summary export</div>
+            <div class="price-feat">Email support</div>
+          </div>
+          <button class="btn btn-outline btn-full btn-lg" onclick="go(2)">Start Free Trial</button>
+        </div>
+        <div class="price-card pop">
+          <div class="price-badge">Most Popular</div>
+          <div class="price-name">Pro Plan</div>
+          <div style="font-size:15px;color:var(--g500);margin-bottom:6px">For growing businesses</div>
+          <div class="price-amt"><span>$</span>29<span>/mo</span></div>
+          <div class="price-per">per workspace · billed monthly</div>
+          <div class="price-feats">
+            <div class="price-feat">Unlimited meetings</div>
+            <div class="price-feat">Xero + Shopify + Google Analytics</div>
+            <div class="price-feat">Real-time voice response in Teams</div>
+            <div class="price-feat">Full meeting summaries + Q&amp;A logs</div>
+            <div class="price-feat">Priority support + onboarding call</div>
+          </div>
+          <button class="btn btn-primary btn-full btn-lg" onclick="go(2)">Get Started — $29/mo</button>
+        </div>
       </div>
     </div>
-    <div class="center-btn">
-      <button class="btn-primary btn-auto" onclick="go(3)">Continue to Teams setup →</button>
+  </section>
+
+  <!-- CTA strip -->
+  <section class="cta-strip">
+    <div class="wrap">
+      <h2>Ready to run smarter meetings?</h2>
+      <p>Join 500+ small businesses who get live answers — not post-meeting reports.</p>
+      <button class="btn btn-white btn-xl" onclick="go(2)">Get Started Free Today</button>
+      <p class="hero-proof-txt">14-day free trial · Setup in 5 minutes · No credit card needed</p>
     </div>
-  </div>
-  <div class="nav-dots">
-    <button class="dot" onclick="go(1)"></button>
-    <button class="dot active" onclick="go(2)"></button>
-    <button class="dot" onclick="go(3)"></button>
-    <button class="dot" onclick="go(4)"></button>
-  </div>
-</div>
+  </section>
 
-<!-- SCREEN 3: MEETING -->
-<div id="s3" class="screen screen-dark">
-
-  <!-- TOP BAR -->
-  <div class="meet-topbar">
-    <div class="meet-topbar-left">
-      <div class="logo-icon meet-logo-icon">⚡</div>
-      <div class="meet-title-group">
-        <span class="meet-name">Strategy Meeting: Q2 Review</span>
-        <span class="meet-platform">Microsoft Teams</span>
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="logo">
+            <div class="logo-mark">⚡</div>
+            <span class="logo-name w">Dex</span>
+          </div>
+          <p class="footer-tagline">AI meeting assistant for small businesses. Live answers from Xero &amp; Shopify.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <h4>Product</h4>
+            <ul>
+              <li><a href="#">Features</a></li>
+              <li><a href="#">Pricing</a></li>
+              <li><a href="#">Security</a></li>
+              <li><a href="#">Changelog</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Integrations</h4>
+            <ul>
+              <li><a href="#">Microsoft Teams</a></li>
+              <li><a href="#">Xero</a></li>
+              <li><a href="#">Shopify</a></li>
+              <li><a href="#">Google Analytics</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Privacy</a></li>
+              <li><a href="#">Terms</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copy">© 2026 Dex Technologies Pty Ltd. All rights reserved.</div>
+        <div style="font-size:13px;color:var(--g600)">Made for small business · Built with ⚡</div>
       </div>
     </div>
-    <div class="meet-topbar-center">
-      <span class="meet-timer">00:18:42</span>
-    </div>
-    <div class="meet-topbar-right">
-      <div class="rec-pill">● REC</div>
-      <div class="participant-pill">👥 4</div>
+  </footer>
+
+</div><!-- /p1 -->
+
+<!-- ══════════════════════════════════════════
+     PAGE 2 — SIGN UP
+══════════════════════════════════════════ -->
+<div id="p2" class="page">
+  <div class="su-right">
+    <div class="su-form-wrap">
+      <h2 class="su-title">Create your account</h2>
+      <p class="su-sub">14-day free trial · No credit card required</p>
+      <div class="su-row">
+        <div class="fld">
+          <label>First name</label>
+          <input class="inp" type="text" placeholder="Jane"/>
+        </div>
+        <div class="fld">
+          <label>Last name</label>
+          <input class="inp" type="text" placeholder="Smith"/>
+        </div>
+      </div>
+      <div class="fld">
+        <label>Work email</label>
+        <input class="inp" type="email" placeholder="jane@yourcompany.com"/>
+      </div>
+      <div class="fld">
+        <label>Password</label>
+        <input class="inp" type="password" placeholder="Create a strong password"/>
+      </div>
+      <div class="fld">
+        <label>Company name</label>
+        <input class="inp" type="text" placeholder="Your Company Pty Ltd"/>
+      </div>
+      <button class="btn btn-primary btn-full btn-lg" onclick="go(3)" style="margin-top:4px">Create Account →</button>
+      <div class="su-divider">or</div>
+      <div class="su-signin">Already have an account? <a onclick="go(3)">Sign in</a></div>
+      <div style="font-size:13px;color:var(--g400);text-align:center;margin-top:20px;line-height:1.6">
+        By creating an account you agree to our
+        <a href="#" style="color:var(--blue)">Terms of Service</a> and
+        <a href="#" style="color:var(--blue)">Privacy Policy</a>.
+      </div>
     </div>
   </div>
+</div><!-- /p2 -->
 
-  <!-- MAIN BODY -->
+<!-- ══════════════════════════════════════════
+     PAGE 3 — DASHBOARD
+══════════════════════════════════════════ -->
+<div id="p3" class="page">
+  <div class="db-layout">
+    <div class="db-sidebar">
+      <div class="sb-icon active" title="Dashboard">🏠</div>
+      <div class="sb-icon" title="Meetings">🎥</div>
+      <div class="sb-icon" title="Integrations">🔗</div>
+      <div class="sb-icon" title="Settings">⚙️</div>
+    </div>
+    <div class="db-main">
+      <div class="db-greeting">Good morning, Jane 👋</div>
+      <div class="db-greet-sub">Here's what's happening with your business today.</div>
+
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-label">Meetings this week</div>
+          <div class="stat-num">5</div>
+          <div class="stat-sub">↑ 2 more than last week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Questions answered</div>
+          <div class="stat-num">34</div>
+          <div class="stat-sub">Across 5 meetings</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg response time</div>
+          <div class="stat-num">1.8<span style="font-size:20px;color:var(--g400)">s</span></div>
+          <div class="stat-sub">↓ 0.3s faster than last week</div>
+        </div>
+      </div>
+
+      <div class="db-section">
+        <div class="db-section-title">Connected integrations</div>
+        <div class="integrations">
+          <div class="int-card connected">
+            <div class="int-logo">🟢</div>
+            <div class="int-info">
+              <div class="int-name">Xero</div>
+              <div style="font-size:13px;color:var(--g500)">Accounting &amp; cash flow</div>
+            </div>
+            <span class="int-badge ok">● Connected</span>
+          </div>
+          <div class="int-card connected">
+            <div class="int-logo">🛍️</div>
+            <div class="int-info">
+              <div class="int-name">Shopify</div>
+              <div style="font-size:13px;color:var(--g500)">Orders &amp; revenue</div>
+            </div>
+            <span class="int-badge ok">● Connected</span>
+          </div>
+          <div class="int-card" style="border-style:dashed;cursor:pointer">
+            <div class="int-logo" style="background:var(--g100);opacity:.5">+</div>
+            <div class="int-info">
+              <div class="int-name" style="color:var(--g400)">Add integration</div>
+              <div style="font-size:13px;color:var(--g300)">Google Analytics, Stripe…</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Manual data source selection for the upcoming meeting -->
+        <div class="int-ms-wrap">
+          <div class="int-ms-label">Select data sources for this meeting</div>
+          <div class="int-ms-opts">
+            <div class="int-ms-opt" id="ms-xero" onclick="toggleSource('xero')">
+              <span class="int-ms-tick" id="tick-xero"></span>
+              <span class="int-ms-icon">🟢</span>
+              <div class="int-ms-info">
+                <div class="int-ms-name">Xero</div>
+                <div class="int-ms-desc">Revenue, cash flow, invoices</div>
+              </div>
+            </div>
+            <div class="int-ms-opt" id="ms-shopify" onclick="toggleSource('shopify')">
+              <span class="int-ms-tick" id="tick-shopify"></span>
+              <span class="int-ms-icon">🛍️</span>
+              <div class="int-ms-info">
+                <div class="int-ms-name">Shopify</div>
+                <div class="int-ms-desc">Orders, products, customers</div>
+              </div>
+            </div>
+          </div>
+          <div class="int-ms-hint" id="ms-hint">Select at least one data source before starting your meeting.</div>
+        </div>
+      </div>
+
+      <div class="db-section">
+        <div class="db-section-title">Recent meetings</div>
+        <table class="meetings-table">
+          <thead>
+            <tr>
+              <th>Meeting</th>
+              <th>Date</th>
+              <th>Questions</th>
+              <th>Duration</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Q2 Finance Review</strong></td>
+              <td>2 Jun 2026</td>
+              <td><span class="meet-tag">12 answered</span></td>
+              <td>47 min</td>
+              <td><button class="btn btn-ghost btn-sm" onclick="go(5)">View →</button></td>
+            </tr>
+            <tr>
+              <td><strong>Weekly Sales Standup</strong></td>
+              <td>29 May 2026</td>
+              <td><span class="meet-tag">8 answered</span></td>
+              <td>22 min</td>
+              <td><button class="btn btn-ghost btn-sm" onclick="go(5)">View →</button></td>
+            </tr>
+            <tr>
+              <td><strong>Ops &amp; Inventory Check</strong></td>
+              <td>27 May 2026</td>
+              <td><span class="meet-tag">7 answered</span></td>
+              <td>34 min</td>
+              <td><button class="btn btn-ghost btn-sm" onclick="go(5)">View →</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="start-btn-wrap">
+        <button id="start-meet-btn" class="btn btn-primary btn-lg" onclick="go(4)"
+          style="font-size:17px;padding:16px 40px;border-radius:14px;box-shadow:0 8px 28px rgba(26,86,160,.3);opacity:.45;pointer-events:none;transition:opacity .2s">
+          ⚡ Start New Meeting
+        </button>
+      </div>
+    </div>
+  </div>
+</div><!-- /p3 -->
+
+<!-- ══════════════════════════════════════════
+     PAGE 4 — LIVE MEETING
+══════════════════════════════════════════ -->
+<div id="p4" class="page">
+
+  <!-- Body: video grid + Dex panel -->
   <div class="meet-body">
-
-    <!-- VIDEO GRID -->
-    <div class="video-area">
-      <div class="video-grid">
-
-        <div class="vtile vtile-speaking">
-          <div class="vtile-bg" style="background:linear-gradient(135deg,#1a2a3a,#0f1e2e)"></div>
-          <div class="vtile-center">
-            <div class="vtile-avatar av-blue">O</div>
-          </div>
-          <div class="vtile-footer">
-            <div class="vtile-name-row">
-              <span class="vtile-name">Oscar B.</span>
-              <span class="vtile-mic">🎤</span>
-            </div>
-          </div>
+    <div class="video-grid">
+      <div class="vtile speaking">
+        <div class="vtile-av av-bl">OB</div>
+        <div class="vtile-footer">
+          <span class="vtile-name">Oscar B.</span>
+          <span class="vtile-mute">🎤</span>
         </div>
-
-        <div class="vtile">
-          <div class="vtile-bg" style="background:linear-gradient(135deg,#1a1a2e,#0d0d1a)"></div>
-          <div class="vtile-center">
-            <div class="vtile-avatar av-purple">N</div>
-          </div>
-          <div class="vtile-footer">
-            <div class="vtile-name-row">
-              <span class="vtile-name">Nam N.</span>
-              <span class="vtile-mic muted">🔇</span>
-            </div>
-          </div>
+      </div>
+      <div class="vtile">
+        <div class="vtile-av av-pu">NN</div>
+        <div class="vtile-footer">
+          <span class="vtile-name">Nam N.</span>
+          <span class="vtile-mute">🔇</span>
         </div>
-
-        <div class="vtile vtile-dex-tile">
-          <div class="vtile-center">
-            <div class="dex-bolt-xl">⚡</div>
-            <div class="dex-label-xl">Dex</div>
-            <div class="dex-status" id="dex-status">● Listening...</div>
-          </div>
-          <div class="vtile-footer">
-            <div class="vtile-name-row">
-              <span class="vtile-name">Dex AI Assistant</span>
-            </div>
-          </div>
+      </div>
+      <div class="vtile">
+        <div class="vtile-av av-te">LM</div>
+        <div class="vtile-footer">
+          <span class="vtile-name">Lingyang M.</span>
+          <span class="vtile-mute">🎤</span>
         </div>
-
-        <div class="vtile">
-          <div class="vtile-bg" style="background:linear-gradient(135deg,#0d1e20,#091515)"></div>
-          <div class="vtile-center">
-            <div class="vtile-avatar av-teal">L</div>
-          </div>
-          <div class="vtile-footer">
-            <div class="vtile-name-row">
-              <span class="vtile-name">Lingyang M.</span>
-              <span class="vtile-mic">🎤</span>
-            </div>
-          </div>
+      </div>
+      <div class="vtile dex-tile">
+        <div class="vtile-bolt">⚡</div>
+        <div class="vtile-dex-st" id="dex-st">● Listening...</div>
+        <div class="vtile-footer">
+          <span class="vtile-name">Dex AI</span>
         </div>
-
       </div>
     </div>
 
-    <!-- DEX AI PANEL -->
+    <!-- Dex AI panel -->
     <div class="dex-panel">
-      <div class="dex-panel-title">
-        <span>⚡</span><span>Dex AI Panel</span>
+      <div class="dex-panel-hdr">
+        <div class="dex-panel-title">⚡ Dex AI Assistant</div>
+        <div class="dex-st" id="dex-status">● Listening...</div>
+      </div>
+      <div class="dex-panel-body">
+
+        <!-- Question bubble -->
+        <div class="q-bubble">
+          <div class="q-bubble-label">LAST QUESTION</div>
+          <div class="q-bubble-text" id="q-disp">Waiting for a question...</div>
+        </div>
+
+        <!-- Pipeline -->
+        <div class="pipeline-box">
+          <div class="pipeline-hdr">AI Pipeline</div>
+          <div class="pipeline-steps">
+            <div class="pstep" id="ps1">
+              <div class="pstep-n">1</div>
+              <div class="pstep-info">
+                <div class="pstep-label">ASR — Whisper</div>
+                <div class="pstep-desc" id="pd1">Waiting for speech...</div>
+              </div>
+            </div>
+            <div class="pstep" id="ps2">
+              <div class="pstep-n">2</div>
+              <div class="pstep-info">
+                <div class="pstep-label">LLM — GPT-4</div>
+                <div class="pstep-desc" id="pd2">Waiting...</div>
+              </div>
+            </div>
+            <div class="pstep" id="ps3">
+              <div class="pstep-n">3</div>
+              <div class="pstep-info">
+                <div class="pstep-label">RAG — API Fetch</div>
+                <div class="pstep-desc" id="pd3">Waiting...</div>
+              </div>
+            </div>
+            <div class="pstep" id="ps4">
+              <div class="pstep-n">4</div>
+              <div class="pstep-info">
+                <div class="pstep-label">MCP — Calculate</div>
+                <div class="pstep-desc" id="pd4">Waiting...</div>
+              </div>
+            </div>
+            <div class="pstep" id="ps5">
+              <div class="pstep-n">5</div>
+              <div class="pstep-info">
+                <div class="pstep-label">Reply — Teams</div>
+                <div class="pstep-desc" id="pd5">Waiting...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Response box -->
+        <div class="resp-box" id="resp-box">
+          <div class="resp-box-hdr">⚡ Dex — Live from Xero</div>
+          <div class="resp-box-body" id="resp-body">
+            <div style="color:#4b5563;font-size:13px;padding:4px 0">Ask a question to see a live response from your data sources.</div>
+          </div>
+        </div>
       </div>
 
+      <!-- Ask input -->
       <div class="ask-row">
-        <input class="ask-input" id="ask-input" placeholder='Ask Dex anything...'/>
-        <button class="ask-btn" onclick="askDex()">Ask</button>
-      </div>
-
-      <div class="question-bubble" id="question-display">Oscar: "What was our revenue last month?"</div>
-
-      <div class="pipeline-box">
-        <div class="pipeline-header">
-          <span>⚡</span>
-          <span class="pipeline-title">Dex AI Pipeline — Live</span>
-        </div>
-        <div class="pipeline-body">
-          <div class="pipeline-step ps-done" id="pstep-1"><div class="ps-num">1</div><span class="ps-label">ASR</span><span class="ps-desc">Speech recognised → text captured</span><span class="ps-tag">Whisper</span></div>
-          <div class="pipeline-step ps-done" id="pstep-2"><div class="ps-num">2</div><span class="ps-label">LLM</span><span class="ps-desc">Intent detected → query Xero</span><span class="ps-tag">GPT-4</span></div>
-          <div class="pipeline-step ps-done" id="pstep-3"><div class="ps-num">3</div><span class="ps-label">RAG</span><span class="ps-desc">April revenue fetched from Xero API</span><span class="ps-tag">API</span></div>
-          <div class="pipeline-step ps-done" id="pstep-4"><div class="ps-num">4</div><span class="ps-label">MCP</span><span class="ps-desc">Growth calculated: +12.4% vs March</span><span class="ps-tag">Calc</span></div>
-          <div class="pipeline-step ps-done" id="pstep-5"><div class="ps-num">5</div><span class="ps-label">Reply</span><span class="ps-desc">Response delivered in Teams</span><span class="ps-tag">&lt;2s</span></div>
-        </div>
-      </div>
-
-      <div class="response-box" id="response-box">
-        <div class="response-header">⚡ Dex — Live from Xero</div>
-        <div class="response-body" id="dex-response">
-          <div class="metric-label">Revenue — April 2026</div>
-          <div><span class="big-num">$84,320</span><span class="growth-tag">▲ +12.4% vs Mar</span></div>
-          <div class="mini-bars" id="bars"></div>
-        </div>
+        <input class="ask-inp" id="ask-inp" type="text" placeholder="Ask Dex: revenue, orders, cash..."/>
+        <button class="ask-btn" onclick="askDex()">Ask ⚡</button>
       </div>
     </div>
+  </div>
 
-  </div><!-- /meet-body -->
-
-  <!-- BOTTOM TOOLBAR -->
+  <!-- Toolbar -->
   <div class="meet-toolbar">
-    <div class="tb-group">
-      <button class="tb-btn"><div class="tb-icon">🎙️</div><div class="tb-label">Mute</div></button>
-      <button class="tb-btn"><div class="tb-icon">📹</div><div class="tb-label">Video</div></button>
-      <button class="tb-btn"><div class="tb-icon">🖥️</div><div class="tb-label">Share</div></button>
-      <button class="tb-btn"><div class="tb-icon">😊</div><div class="tb-label">Reactions</div></button>
-    </div>
-    <div class="tb-center">
-      <button class="tb-btn tb-end" onclick="go(4)">
-        <div class="tb-icon tb-end-icon">✕</div>
-        <div class="tb-label">End Call</div>
-      </button>
-    </div>
-    <div class="tb-group tb-group-right">
-      <button class="tb-btn"><div class="tb-icon">👥</div><div class="tb-label">Participants</div></button>
-      <button class="tb-btn"><div class="tb-icon">💬</div><div class="tb-label">Chat</div></button>
-      <button class="tb-btn"><div class="tb-icon tb-more">•••</div><div class="tb-label">More</div></button>
-    </div>
-  </div>
-  <div class="nav-dots s3-dots">
-    <button class="dot" onclick="go(1)"></button>
-    <button class="dot" onclick="go(2)"></button>
-    <button class="dot active" onclick="go(3)"></button>
-    <button class="dot" onclick="go(4)"></button>
+    <button class="tb-btn"><span class="tb-btn-icon">🎤</span><span class="tb-btn-label">Mute</span></button>
+    <button class="tb-btn"><span class="tb-btn-icon">📷</span><span class="tb-btn-label">Video</span></button>
+    <button class="tb-btn"><span class="tb-btn-icon">🖥️</span><span class="tb-btn-label">Share</span></button>
+    <button class="tb-btn"><span class="tb-btn-icon">💬</span><span class="tb-btn-label">Chat</span></button>
+    <button class="tb-btn"><span class="tb-btn-icon">👥</span><span class="tb-btn-label">People</span></button>
+    <div style="flex:1"></div>
+    <button class="tb-end" onclick="go(5)">📵 End Call</button>
   </div>
 
-</div>
-
-<!-- SCREEN 4: SUMMARY -->
-<div id="s4" class="screen">
-  <div class="nav-bar">
-    <div class="logo"><div class="logo-icon">⚡</div><span class="logo-text">Dex</span></div>
-    <button class="btn-outline" onclick="go(1)">← Back to start</button>
+  <!-- Inline nav dots for meeting page -->
+  <div class="m-ndbar">
+    <button class="nd"    onclick="go(1)"></button>
+    <button class="nd"    onclick="go(2)"></button>
+    <button class="nd"    onclick="go(3)"></button>
+    <button class="nd on" onclick="go(4)"></button>
+    <button class="nd"    onclick="go(5)"></button>
   </div>
-  <div class="page-body">
-    <div class="page-title">Meeting summary</div>
-    <div class="page-sub">Strategy Meeting: Q2 Review — 31 May 2026, 10:00am — Duration: 45 min</div>
-    <div class="stats">
-      <div class="stat"><div class="stat-num">7</div><div class="stat-label">Questions answered</div></div>
-      <div class="stat"><div class="stat-num">2</div><div class="stat-label">Data sources used</div></div>
-      <div class="stat"><div class="stat-num">1.8s</div><div class="stat-label">Avg response time</div></div>
+
+  <!-- Hidden element for timer (referenced in JS) -->
+  <span id="meet-timer" style="display:none">00:00:00</span>
+
+</div><!-- /p4 -->
+
+<!-- ══════════════════════════════════════════
+     PAGE 5 — SUMMARY
+══════════════════════════════════════════ -->
+<div id="p5" class="page">
+  <div class="db-layout">
+    <div class="db-sidebar">
+      <div class="sb-icon"        title="Dashboard">🏠</div>
+      <div class="sb-icon active" title="Meetings">🎥</div>
+      <div class="sb-icon"        title="Integrations">🔗</div>
+      <div class="sb-icon"        title="Settings">⚙️</div>
     </div>
-    <div class="pipeline-summary">
-      <div class="pipeline-summary-title">AI pipeline used this meeting</div>
-      <div class="pipeline-flow">
-        <span class="flow-tag flow-blue">ASR → Text</span>
-        <span class="flow-arrow">→</span>
-        <span class="flow-tag flow-blue">LLM Intent</span>
-        <span class="flow-arrow">→</span>
-        <span class="flow-tag flow-blue">RAG Fetch</span>
-        <span class="flow-arrow">→</span>
-        <span class="flow-tag flow-blue">MCP Compute</span>
-        <span class="flow-arrow">→</span>
-        <span class="flow-tag flow-green">Response ✓</span>
+    <div class="db-main">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
+        <div>
+          <div class="db-greeting">Meeting Summary</div>
+          <div class="db-greet-sub">Q2 Finance Review · 3 Jun 2026 · 47 minutes · 4 participants</div>
+        </div>
+        <button class="btn btn-outline" style="flex-shrink:0;gap:8px">⬇ Export PDF</button>
+      </div>
+
+      <div class="stat-cards" style="margin-bottom:28px">
+        <div class="stat-card">
+          <div class="stat-label">Questions answered</div>
+          <div class="stat-num">7</div>
+          <div class="stat-sub">All answered live in meeting</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Data sources used</div>
+          <div class="stat-num">2</div>
+          <div class="stat-sub">Xero + Shopify</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg response time</div>
+          <div class="stat-num">1.8<span style="font-size:20px;color:var(--g400)">s</span></div>
+          <div class="stat-sub">Fastest: 1.2s · Slowest: 2.4s</div>
+        </div>
+      </div>
+
+      <div class="db-section" style="margin-bottom:24px">
+        <div class="db-section-title">AI Pipeline — how Dex answered your questions</div>
+        <div class="pipeline-flow">
+          <div class="pf-tag blue">🎙️ ASR · Whisper</div>
+          <div class="pf-arrow">→</div>
+          <div class="pf-tag blue">📝 Text Captured</div>
+          <div class="pf-arrow">→</div>
+          <div class="pf-tag blue">🧠 LLM Intent</div>
+          <div class="pf-arrow">→</div>
+          <div class="pf-tag blue">🔗 RAG Fetch</div>
+          <div class="pf-arrow">→</div>
+          <div class="pf-tag blue">⚙️ MCP Compute</div>
+          <div class="pf-arrow">→</div>
+          <div class="pf-tag green">✓ Response delivered</div>
+        </div>
+        <div style="font-size:14px;color:var(--g500);line-height:1.7">
+          All 7 questions were processed through Dex's 5-stage AI pipeline. Xero was queried 5 times, Shopify 2 times. MCP computed 4 derived metrics (growth rate, runway, average order value, YTD comparison).
+        </div>
+      </div>
+
+      <div class="db-section">
+        <div class="db-section-title">Q&amp;A Log — 7 questions answered live</div>
+        <div class="sum-qa-list">
+          <div class="qa-item">
+            <div class="qa-q">What was our revenue last month?</div>
+            <div class="qa-a">April 2026 revenue was <strong>$84,320</strong>, up 12.4% compared to March 2026 ($75,000). This puts you 6.2% ahead of your Q2 target.</div>
+            <div class="qa-tags">
+              <span class="qa-tag tag-xero">Xero · Invoices API</span>
+              <span class="qa-tag tag-mcp">MCP · growth calc</span>
+            </div>
+          </div>
+          <div class="qa-item">
+            <div class="qa-q">How many orders did we process last month?</div>
+            <div class="qa-a">Shopify processed <strong>1,204 orders</strong> in April 2026, up 8.2% from March (1,112 orders). Average order value was $70.03.</div>
+            <div class="qa-tags">
+              <span class="qa-tag tag-shopify">Shopify · Orders API</span>
+              <span class="qa-tag tag-mcp">MCP · avg calc</span>
+            </div>
+          </div>
+          <div class="qa-item">
+            <div class="qa-q">What is our current cash position?</div>
+            <div class="qa-a">Current cash balance is <strong>$142,800</strong> across all Xero accounts. At current burn rate, this represents approximately 18 days of operating runway.</div>
+            <div class="qa-tags">
+              <span class="qa-tag tag-xero">Xero · Bank Feeds API</span>
+              <span class="qa-tag tag-mcp">MCP · runway calc</span>
+            </div>
+          </div>
+          <div class="qa-item">
+            <div class="qa-q">What's our gross margin this quarter?</div>
+            <div class="qa-a">Q2 2026 gross margin is <strong>62.4%</strong>, compared to 59.1% in Q1. Cost of goods sold decreased by 3.3 percentage points due to the new supplier agreement.</div>
+            <div class="qa-tags">
+              <span class="qa-tag tag-xero">Xero · P&amp;L API</span>
+              <span class="qa-tag tag-mcp">MCP · margin calc</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;margin-top:8px">
+        <button class="btn btn-primary btn-lg" onclick="go(4)">⚡ Start New Meeting</button>
+        <button class="btn btn-outline btn-lg" onclick="go(3)">← Back to Dashboard</button>
       </div>
     </div>
-    <div class="qa-header">
-      <div class="qa-title">Questions &amp; answers</div>
-      <button class="btn-outline">↓ Export PDF</button>
-    </div>
-    <div class="qa-item"><div class="qa-q">What was our revenue last month?</div><div class="qa-a">$84,320 — up 12.4% vs March <span class="src-tag">Xero</span><span class="src-tag">MCP calc</span></div></div>
-    <div class="qa-item"><div class="qa-q">How many orders did we process in April?</div><div class="qa-a">1,204 orders — avg order value $70.03 <span class="src-tag">Shopify</span></div></div>
-    <div class="qa-item"><div class="qa-q">What is our top selling product this quarter?</div><div class="qa-a">Product X — 342 units sold, $24,150 revenue <span class="src-tag">Shopify</span></div></div>
-    <div class="qa-item"><div class="qa-q">What is our current cash position?</div><div class="qa-a">$142,800 available — 18 days of runway <span class="src-tag">Xero</span><span class="src-tag">MCP calc</span></div></div>
-    <div class="center-btn" style="margin-top:20px">
-      <button class="btn-primary btn-auto" onclick="go(1)">Start a new meeting</button>
-    </div>
   </div>
-  <div class="nav-dots">
-    <button class="dot" onclick="go(1)"></button>
-    <button class="dot" onclick="go(2)"></button>
-    <button class="dot" onclick="go(3)"></button>
-    <button class="dot active" onclick="go(4)"></button>
-  </div>
-</div>
+</div><!-- /p5 -->
 
 <script src="script.js"></script>
 </body>
