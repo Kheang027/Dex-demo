@@ -16,7 +16,7 @@ function go(n) {
     d.classList.toggle('on', i === n - 1);
   });
 
-  if (n === 4) {
+  if (n === 5) {
     ndbar.classList.add('hide');
     var mds = document.querySelectorAll('.m-ndbar .nd');
     mds.forEach(function(d, i) {
@@ -237,6 +237,20 @@ function initBars() {
       '<div class="b-lbl">' + b.m + '</div>' +
     '</div>';
   }).join('');
+}
+
+/* ─── Dex modal ─── */
+function openDexModal() {
+  document.getElementById('dex-modal').classList.remove('hidden');
+}
+
+function closeDexModal() {
+  document.getElementById('dex-modal').classList.add('hidden');
+}
+
+function addDexToTeams() {
+  closeDexModal();
+  go(5);
 }
 
 document.addEventListener('DOMContentLoaded', function() {

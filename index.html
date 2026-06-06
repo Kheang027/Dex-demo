@@ -18,6 +18,7 @@
   <button class="nd"    onclick="go(3)"></button>
   <button class="nd"    onclick="go(4)"></button>
   <button class="nd"    onclick="go(5)"></button>
+  <button class="nd"    onclick="go(6)"></button>
 </div>
 
 <!-- ══════════════════════════════════════════
@@ -452,21 +453,21 @@
               <td>2 Jun 2026</td>
               <td><span class="meet-tag">12 answered</span></td>
               <td>47 min</td>
-              <td><button class="btn btn-ghost btn-sm" onclick="go(5)">View →</button></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="go(6)">View →</button></td>
             </tr>
             <tr>
               <td><strong>Weekly Sales Standup</strong></td>
               <td>29 May 2026</td>
               <td><span class="meet-tag">8 answered</span></td>
               <td>22 min</td>
-              <td><button class="btn btn-ghost btn-sm" onclick="go(5)">View →</button></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="go(6)">View →</button></td>
             </tr>
             <tr>
               <td><strong>Ops &amp; Inventory Check</strong></td>
               <td>27 May 2026</td>
               <td><span class="meet-tag">7 answered</span></td>
               <td>34 min</td>
-              <td><button class="btn btn-ghost btn-sm" onclick="go(5)">View →</button></td>
+              <td><button class="btn btn-ghost btn-sm" onclick="go(6)">View →</button></td>
             </tr>
           </tbody>
         </table>
@@ -483,9 +484,132 @@
 </div><!-- /p3 -->
 
 <!-- ══════════════════════════════════════════
-     PAGE 4 — LIVE MEETING
+     PAGE 4 — TEAMS APP STORE
 ══════════════════════════════════════════ -->
 <div id="p4" class="page">
+
+  <div class="teams-layout">
+
+    <!-- Left sidebar -->
+    <div class="teams-sidebar">
+      <div class="teams-logo">T</div>
+      <div class="teams-nav-icon" title="Activity">🔔<span>Activity</span></div>
+      <div class="teams-nav-icon" title="Chat">💬<span>Chat</span></div>
+      <div class="teams-nav-icon" title="Teams">👥<span>Teams</span></div>
+      <div class="teams-nav-icon" title="Calendar">📅<span>Calendar</span></div>
+      <div class="teams-nav-icon" title="Calls">📞<span>Calls</span></div>
+      <div class="teams-nav-icon active" title="Apps">⊞<span>Apps</span></div>
+      <div class="teams-avatar-bottom">JS</div>
+    </div>
+
+    <!-- Main content -->
+    <div class="teams-main">
+
+      <!-- Top bar -->
+      <div class="teams-topbar">
+        <button class="btn btn-ghost btn-sm" onclick="go(3)" style="font-size:18px;padding:4px 10px">←</button>
+        <input class="teams-search" type="text" placeholder="Search apps and more"/>
+        <div class="teams-avatar-bottom" style="flex-shrink:0">JS</div>
+      </div>
+
+      <!-- Scrollable content -->
+      <div class="teams-content">
+
+        <!-- Banner -->
+        <div class="teams-banner">
+          <h2>Boost your meetings with AI</h2>
+          <p>Discover apps that work smarter in Teams</p>
+        </div>
+
+        <!-- App cards -->
+        <div class="teams-section-title">Featured for you</div>
+
+        <!-- Card 1 — Dex (highlighted) -->
+        <div class="app-store-card dex-card">
+          <div class="app-store-icon dex-icon">⚡</div>
+          <div class="app-store-info">
+            <div class="app-store-name dex-name">Dex</div>
+            <div class="app-store-publisher">Dex Technologies Pty Ltd</div>
+            <div class="app-store-stars">★★★★★ 4.9 <span style="color:#6b7280">(128 ratings)</span></div>
+            <div class="app-store-desc">AI Meeting Assistant — answers business questions live in your meetings</div>
+          </div>
+          <button class="btn-store-add dex-add" onclick="openDexModal()">Add</button>
+        </div>
+
+        <!-- Card 2 — Copilot -->
+        <div class="app-store-card">
+          <div class="app-store-icon grey-icon">C</div>
+          <div class="app-store-info">
+            <div class="app-store-name">Copilot</div>
+            <div class="app-store-publisher">Microsoft Corporation</div>
+            <div class="app-store-stars">★★★★☆ 4.3</div>
+          </div>
+          <button class="btn-store-open">Open</button>
+        </div>
+
+        <!-- Card 3 — Polls -->
+        <div class="app-store-card">
+          <div class="app-store-icon grey-icon">P</div>
+          <div class="app-store-info">
+            <div class="app-store-name">Polls</div>
+            <div class="app-store-publisher">Microsoft Corporation</div>
+            <div class="app-store-stars">★★★☆☆ 3.8</div>
+          </div>
+          <button class="btn-store-add">Add</button>
+        </div>
+
+        <!-- Card 4 — Jira Cloud -->
+        <div class="app-store-card">
+          <div class="app-store-icon grey-icon">J</div>
+          <div class="app-store-info">
+            <div class="app-store-name">Jira Cloud</div>
+            <div class="app-store-publisher">Atlassian.com</div>
+            <div class="app-store-stars">★★★★☆ 4.1</div>
+          </div>
+          <button class="btn-store-add">Add</button>
+        </div>
+
+        <!-- Card 5 — SharePoint -->
+        <div class="app-store-card">
+          <div class="app-store-icon grey-icon">S</div>
+          <div class="app-store-info">
+            <div class="app-store-name">SharePoint</div>
+            <div class="app-store-publisher">Microsoft Corporation</div>
+            <div class="app-store-stars">★★★☆☆ 3.6</div>
+          </div>
+          <button class="btn-store-open">Open</button>
+        </div>
+
+      </div><!-- /teams-content -->
+    </div><!-- /teams-main -->
+  </div><!-- /teams-layout -->
+
+  <!-- Dex modal -->
+  <div class="modal-overlay hidden" id="dex-modal">
+    <div class="modal-card">
+      <div class="modal-icon">⚡</div>
+      <div class="modal-title">Add Dex to Teams</div>
+      <div class="modal-body">Dex will join your meetings as a bot participant and answer live business questions using your connected Xero and Shopify data.</div>
+      <ul class="modal-perms">
+        <li>Join meetings as a participant</li>
+        <li>Access Xero financial data</li>
+        <li>Access Shopify sales data</li>
+        <li>Respond in meeting chat</li>
+      </ul>
+      <div class="modal-btns">
+        <button class="modal-cancel" onclick="closeDexModal()">Cancel</button>
+        <button class="modal-confirm" onclick="addDexToTeams()">Add to Teams</button>
+      </div>
+    </div>
+  </div>
+
+
+</div><!-- /p4 -->
+
+<!-- ══════════════════════════════════════════
+     PAGE 5 — LIVE MEETING
+══════════════════════════════════════════ -->
+<div id="p5" class="page">
 
   <!-- Body: video grid + Dex panel -->
   <div class="meet-body">
@@ -601,7 +725,7 @@
     <button class="tb-btn"><span class="tb-btn-icon">💬</span><span class="tb-btn-label">Chat</span></button>
     <button class="tb-btn"><span class="tb-btn-icon">👥</span><span class="tb-btn-label">People</span></button>
     <div style="flex:1"></div>
-    <button class="tb-end" onclick="go(5)">📵 End Call</button>
+    <button class="tb-end" onclick="go(6)">📵 End Call</button>
   </div>
 
   <!-- Inline nav dots for meeting page -->
@@ -609,19 +733,20 @@
     <button class="nd"    onclick="go(1)"></button>
     <button class="nd"    onclick="go(2)"></button>
     <button class="nd"    onclick="go(3)"></button>
-    <button class="nd on" onclick="go(4)"></button>
-    <button class="nd"    onclick="go(5)"></button>
+    <button class="nd"    onclick="go(4)"></button>
+    <button class="nd on" onclick="go(5)"></button>
+    <button class="nd"    onclick="go(6)"></button>
   </div>
 
   <!-- Hidden element for timer (referenced in JS) -->
   <span id="meet-timer" style="display:none">00:00:00</span>
 
-</div><!-- /p4 -->
+</div><!-- /p5 -->
 
 <!-- ══════════════════════════════════════════
-     PAGE 5 — SUMMARY
+     PAGE 6 — SUMMARY
 ══════════════════════════════════════════ -->
-<div id="p5" class="page">
+<div id="p6" class="page">
   <div class="db-layout">
     <div class="db-sidebar">
       <div class="sb-icon"        title="Dashboard">🏠</div>
@@ -715,12 +840,12 @@
       </div>
 
       <div style="display:flex;gap:14px;margin-top:8px">
-        <button class="btn btn-primary btn-lg" onclick="go(4)">⚡ Start New Meeting</button>
+        <button class="btn btn-primary btn-lg" onclick="go(5)">⚡ Start New Meeting</button>
         <button class="btn btn-outline btn-lg" onclick="go(3)">← Back to Dashboard</button>
       </div>
     </div>
   </div>
-</div><!-- /p5 -->
+</div><!-- /p6 -->
 
 <script src="script.js"></script>
 </body>
